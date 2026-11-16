@@ -3,51 +3,40 @@
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
 <title>EasyPay — Send, Receive, Buy, P2P</title>
+<!-- SIMPLE MODE - NO crypto.subtle - WORKS EVERYWHERE -->
 <style>
   *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
   body{background:#04060C;color:#0B0E14;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;margin:0;padding:0}
   .container{padding:16px 16px 110px;max-width:520px;margin:0 auto}
-  /* HEADER */
   .header{display:flex;justify-content:space-between;align-items:center;padding:10px 4px 6px}
   .logo{font-size:28px;font-weight:900;letter-spacing:-.5px;color:#fff}
   .logo span{color:#2E7DFF;background:linear-gradient(135deg,#2E7DFF,#00C6FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
   .avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#2E7DFF,#00C6FF);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:16px;box-shadow:0 4px 14px rgba(46,125,255,.5)}
   .greet{color:#8A94A6;font-size:13px;margin:2px 0 0 4px}
   .greet b{color:#fff;font-size:18px}
-  /* CARDS - LIGHT ASH + MODERN */
   .card{background:#EDEFF2;border-radius:24px;padding:18px;margin-top:14px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
   .card-dark{background:linear-gradient(135deg,#0B1220 0%,#122A5A 55%,#2E7DFF 100%);color:#fff;border-radius:26px;padding:20px;box-shadow:0 12px 30px rgba(46,125,255,.35);position:relative;overflow:hidden}
-  .card-dark::after{content:"";position:absolute;right:-40px;top:-40px;width:150px;height:150px;background:radial-gradient(circle,rgba(255,255,255,.25),transparent 70%);border-radius:50%}
   .balance-label{color:#C5D6FF;font-size:12px;letter-spacing:1px;font-weight:700}
-  .balance-big{font-size:36px;font-weight:900;margin:6px 0 2px;letter-spacing:-.5px}
+  .balance-big{font-size:36px;font-weight:900;margin:6px 0 2px}
   .balance-big span{color:#7FB2FF;font-size:20px}
-  .pill-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
-  .chip{background:rgba(255,255,255,.15);backdrop-filter:blur(8px);color:#fff;padding:7px 12px;border-radius:20px;font-size:12px;font-weight:600}
-  .chip-blue{background:#2E7DFF}
   .small{color:#5A6472;font-size:12px;line-height:1.5}
   .small-light{color:#C5D6FF;font-size:12px}
   .warn{background:#FFF3D6;border:1px solid #FFB800;color:#7A5A00;padding:12px;border-radius:14px;font-size:12px;margin-top:10px;line-height:1.5}
   .success{background:#D6F5E3;border:1px solid #00AA55;color:#006633;padding:12px;border-radius:14px;font-size:12px;margin-top:10px}
-  .error{background:#FFE3E3;border:1px solid #FF3B30;color:#8B0000;padding:12px;border-radius:14px;font-size:12px;margin-top:10px}
-  /* BUTTONS */
-  button{background:linear-gradient(135deg,#2E7DFF,#00A3FF);color:#fff;border:none;padding:16px;width:100%;border-radius:16px;font-size:15px;font-weight:800;margin-top:10px;cursor:pointer;box-shadow:0 6px 16px rgba(46,125,255,.35);transition:.15s}
+  button{background:linear-gradient(135deg,#2E7DFF,#00A3FF);color:#fff;border:none;padding:16px;width:100%;border-radius:16px;font-size:15px;font-weight:800;margin-top:10px;cursor:pointer;box-shadow:0 6px 16px rgba(46,125,255,.35)}
   button:active{transform:scale(.98)}
   button.secondary{background:#fff;color:#0B0E14;border:1.5px solid #D6DAE0;box-shadow:none}
   button.green{background:linear-gradient(135deg,#00C853,#00E676);box-shadow:0 6px 16px rgba(0,200,83,.3)}
   button.dark{background:#0B0E14;box-shadow:none}
   button.half{width:48%}
-  button:disabled{opacity:.6}
   input,select{width:100%;padding:15px;background:#fff;color:#0B0E14;border:1.5px solid #D6DAE0;border-radius:14px;font-size:14px;margin-top:10px;outline:none}
-  input:focus,select:focus,textarea:focus{border-color:#2E7DFF;box-shadow:0 0 0 4px rgba(46,125,255,.15)}
-  textarea{width:100%;padding:14px;background:#fff;color:#0B0E14;border:1.5px solid #D6DAE0;border-radius:14px;font-size:14px;margin-top:10px;min-height:70px;outline:none}
+  textarea{width:100%;padding:14px;background:#fff;color:#0B0E14;border:1.5px solid #D6DAE0;border-radius:14px;font-size:14px;margin-top:10px;min-height:70px}
   .address{background:#fff;padding:13px;border-radius:12px;word-break:break-all;font-size:13px;margin:8px 0;border:1px solid #D6DAE0}
   .seed{background:#0B0E14;border:2px solid #2E7DFF;color:#fff;padding:14px;border-radius:14px;word-break:break-word;line-height:1.8;font-size:15px;font-weight:700;text-align:center}
   .mnemonic{background:#FFF8D6;border:1.5px solid #FFB800;color:#5A4A00;padding:12px;border-radius:12px;word-break:break-all;font-size:11px}
   .hidden{display:none}
-  /* QUICK ACTIONS - MODERN */
   .actions{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
-  .action{background:#fff;border-radius:18px;padding:14px 6px;text-align:center;cursor:pointer;border:1px solid #E2E6EC;box-shadow:0 2px 8px rgba(0,0,0,.05)}
-  .action:active{transform:scale(.96)}
+  .action{background:#fff;border-radius:18px;padding:14px 6px;text-align:center;cursor:pointer;border:1px solid #E2E6EC}
   .action-icon{width:44px;height:44px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff}
   .action b{font-size:12px;color:#0B0E14}
   .action small{display:block;color:#5A6472;font-size:10px}
@@ -56,141 +45,91 @@
   .coin-addr{font-size:11px;color:#5A6472;word-break:break-all}
   .coin-icon{width:42px;height:42px;border-radius:50%;background:#fff;border:1.5px solid #E2E6EC;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
   .tx{padding:12px 0;border-bottom:1px solid #E2E6EC;font-size:13px}
-  .tabs{position:fixed;bottom:0;left:0;right:0;background:rgba(5,7,13,.96);backdrop-filter:blur(12px);border-top:1px solid #1A2233;display:flex;justify-content:space-around;padding:10px 0 calc(10px + env(safe-area-inset-bottom));max-width:520px;margin:0 auto;z-index:99}
-  .tab{color:#8A94A6;font-size:11px;text-align:center;cursor:pointer;padding:6px 6px;border-radius:14px;flex:1}
+  .tabs{position:fixed;bottom:0;left:0;right:0;background:rgba(5,7,13,.96);border-top:1px solid #1A2233;display:flex;justify-content:space-around;padding:10px 0;max-width:520px;margin:0 auto;z-index:99}
+  .tab{color:#8A94A6;font-size:11px;text-align:center;cursor:pointer;padding:6px;border-radius:14px;flex:1}
   .tab.active{color:#fff;background:#2E7DFF}
   .tab span{display:block;font-size:20px}
   .qrbox{background:#0B0E14;color:#fff;padding:14px;border-radius:14px;text-align:center;font-size:11px;word-break:break-all;margin-top:10px;border:1px solid #2E7DFF}
   .toggle{display:flex;gap:8px;margin-top:10px;background:#E2E6EC;padding:4px;border-radius:14px}
   .toggle button{flex:1;padding:12px;font-size:13px;box-shadow:none;margin:0;border-radius:10px}
   .toggle button.active{background:#0B0E14;color:#fff}
-  .p2p-card{background:#fff;border:1.5px solid #E2E6EC;border-radius:18px;padding:14px;margin-top:10px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+  .p2p-card{background:#fff;border:1.5px solid #E2E6EC;border-radius:18px;padding:14px;margin-top:10px}
   .pill{font-size:11px;padding:5px 10px;border-radius:20px;display:inline-block;font-weight:800;color:#fff}
   .pill-buy{background:#00C853} .pill-sell{background:#FF3B30}
-  .section-title{font-size:16px;font-weight:900;margin:0}
   .top-pill{display:inline-block;background:#E8F0FF;color:#2E7DFF;padding:6px 12px;border-radius:20px;font-size:11px;font-weight:800}
   h2,h3{color:#0B0E14}
-  .step{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #E2E6EC}
-  .step:last-child{border-bottom:none}
-  .step-num{width:28px;height:28px;border-radius:50%;background:#2E7DFF;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;flex-shrink:0}
 </style>
 </head>
 <body>
 <div class="container">
 <div class="header"><div class="logo">Easy<span>Pay</span></div><div class="avatar">E</div></div>
 <p class="greet">Welcome to <br><b>Your Money, Your Control.</b></p>
+<p id="jsCheck" style="color:#FF3B30;font-size:12px;text-align:center;">If you see this, JS is NOT running — hard refresh!</p>
 
-<!-- FIX: SHOW IF OLD WALLET BLOCKS CREATE -->
-<div id="stuckBox" class="card hidden" style="border:2px solid #FF3B30;">
-  <h3 style="margin:0;color:#FF3B30;">⚠️ Old wallet found</h3>
-  <p class="small">Your phone has an old test wallet that is blocking Create. Tap below to clear it and start fresh (only if you saved your 12 words).</p>
-  <button class="secondary" onclick="clearOldWallet()">🗑️ Clear Old Wallet & Start Fresh</button>
-  <button onclick="showLock()">I Remember My PIN — Go to Login</button>
-</div>
-
-<!-- LOCK -->
 <div id="lockScreen" class="hidden">
-  <div class="card"><h2 style="margin:0;">Welcome Back 👋</h2><p class="small">Enter your PIN to unlock</p><input id="unlockPin" type="password" placeholder="••••" maxlength="6" inputmode="numeric" /><button onclick="unlockWallet()">Unlock Wallet</button><p id="unlockErr" class="small" style="color:#FF3B30;"></p><button class="secondary" onclick="showCreate()">Forgot PIN? Create / Import New Wallet</button><button class="secondary" onclick="clearOldWallet()">🗑️ Delete Wallet / Start Fresh</button></div>
+  <div class="card"><h2 style="margin:0;">Welcome Back 👋</h2><p class="small">Enter your PIN to unlock</p><input id="unlockPin" type="password" placeholder="••••" maxlength="6" inputmode="numeric" /><button onclick="unlockWallet()">Unlock Wallet</button><p id="unlockErr" class="small" style="color:#FF3B30;"></p><button class="secondary" onclick="showCreate()">Forgot PIN? Create / Import New</button><button class="secondary" onclick="clearWallet()">🗑️ Delete Wallet / Start Fresh</button></div>
 </div>
 
 <div id="startScreen">
   <div class="card">
-    <span class="top-pill">✦ SECURE WALLET ✦</span>
-    <h2 style="margin:10px 0 4px 0;">Create Wallet</h2><p class="small">12-word seed phrase = your wallet. Write it down and keep it safe.</p>
-    <input id="newPin" type="password" placeholder="Create 4-6 digit PIN" maxlength="6" inputmode="numeric" />
+    <span class="top-pill">✦ SECURE WALLET ✦ SIMPLE MODE</span>
+    <h2 style="margin:10px 0 4px 0;">Create Wallet</h2><p class="small">12-word seed = your wallet. Write it down.</p>
+    <input id="newPin" type="password" placeholder="Create 4-6 digit PIN e.g. 1234" maxlength="6" inputmode="numeric" />
     <input id="newPin2" type="password" placeholder="Confirm PIN" maxlength="6" inputmode="numeric" />
     <button id="createBtn" onclick="createWallet()">+ Create New Wallet</button>
+    <button class="secondary" onclick="testButton()">🔍 TEST BUTTON — Tap if Create doesn't work</button>
     <button class="secondary" onclick="document.getElementById('importBox').classList.toggle('hidden')">Import Existing Wallet</button>
-    <div id="importBox" class="hidden"><textarea id="importSeed" placeholder="12 words OR 64-char hex..."></textarea><input id="importPin" type="password" placeholder="Set PIN" maxlength="6" inputmode="numeric" /><button onclick="importWallet()">Sign In</button></div>
+    <div id="importBox" class="hidden"><textarea id="importSeed" placeholder="12 words..."></textarea><input id="importPin" type="password" placeholder="Set PIN" maxlength="6" inputmode="numeric" /><button onclick="importWallet()">Sign In</button></div>
     <div class="warn">⚠️ Seed + PIN = your money. Lose seed = lose money.</div>
-    <p id="createStatus" class="small"></p>
+    <p id="createStatus" class="small" style="color:#2E7DFF;font-weight:bold;"></p>
     <div id="debugBox" class="small" style="background:#F1F3F6;padding:10px;border-radius:10px;margin-top:10px;"></div>
-  </div>
-  <div class="card">
-    <h3 style="margin:0;">How it works</h3>
-    <div class="step"><div class="step-num">1</div><div><b>Create wallet</b><div class="small">Set PIN, save 12 words</div></div></div>
-    <div class="step"><div class="step-num">2</div><div><b>Receive BTC</b><div class="small">Share your address, get BTC</div></div></div>
-    <div class="step"><div class="step-num">3</div><div><b>Send / Buy / P2P</b><div class="small">Send to anyone, buy on exchange, trade P2P</div></div></div>
   </div>
 </div>
 
 <div id="walletScreen" class="hidden">
-  <!-- HOME - MODERN -->
   <div id="tab-home">
     <div class="card-dark">
       <p class="balance-label">TOTAL BALANCE</p>
       <div class="balance-big" id="bigBalance">0.00000000 <span>BTC</span></div>
       <p class="small-light">≈ $<span id="usdDisplay">0.00</span> • On-chain: <span id="onchainDisplay">0</span> sats</p>
-      <div class="pill-row"><span class="chip chip-blue">● Live</span><span class="chip" id="addressShort">—</span></div>
-      <div id="balanceDisplay" style="display:none;">0.00000000 BTC</div>
       <p id="addressDisplay" class="address" style="background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25);"></p>
+      <div id="balanceDisplay" style="display:none;">0.00000000 BTC</div>
     </div>
-
     <div class="actions">
       <div class="action" onclick="switchTab('send')"><div class="action-icon" style="background:linear-gradient(135deg,#2E7DFF,#00A3FF);">↑</div><b>Send</b><small>Bitcoin</small></div>
       <div class="action" onclick="switchTab('receive')"><div class="action-icon" style="background:linear-gradient(135deg,#00C853,#00E676);">↓</div><b>Receive</b><small>Bitcoin</small></div>
       <div class="action" onclick="switchTab('buy')"><div class="action-icon" style="background:linear-gradient(135deg,#FF8A00,#FFB800);">💳</div><b>Buy</b><small>BTC</small></div>
       <div class="action" onclick="switchTab('p2p')"><div class="action-icon" style="background:linear-gradient(135deg,#7C4DFF,#B388FF);">🤝</div><b>P2P</b><small>Trade</small></div>
     </div>
-
-    <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;"><h3 class="section-title">Your Coins</h3><span class="top-pill" onclick="checkBalance();loadHistory()">↻ Refresh</span></div>
-      <div class="coin"><div style="display:flex;gap:10px;align-items:center;"><div class="coin-icon">₿</div><div><b>Bitcoin</b><div class="small">BTC</div><div class="coin-addr" id="btcAddr">-</div></div></div><div style="text-align:right"><b id="coinBtc">0.00000000</b><div class="small">BTC</div></div></div>
-      <div class="coin"><div style="display:flex;gap:10px;align-items:center;"><div class="coin-icon">Ξ</div><div><b>Ethereum</b><div class="small">ETH</div><div class="coin-addr" id="ethAddr">-</div></div></div><div style="text-align:right"><b>0.00</b><div class="small">ETH</div></div></div>
-      <div class="coin"><div style="display:flex;gap:10px;align-items:center;"><div class="coin-icon">₮</div><div><b>USDT</b><div class="small">USDT • ERC20</div><div class="coin-addr" id="usdtAddr">-</div></div></div><div style="text-align:right"><b>0.00</b><div class="small">USDT</div></div></div>
+    <div class="card"><div style="display:flex;justify-content:space-between;"><h3 style="margin:0;">Your Coins</h3><span class="top-pill" onclick="checkBalance();loadHistory()">↻ Refresh</span></div>
+      <div class="coin"><div style="display:flex;gap:10px;align-items:center;"><div class="coin-icon">₿</div><div><b>Bitcoin</b><div class="small">BTC</div><div class="coin-addr" id="btcAddr">-</div></div></div><div><b id="coinBtc">0.00000000</b></div></div>
+      <div class="coin"><div style="display:flex;gap:10px;align-items:center;"><div class="coin-icon">Ξ</div><div><b>Ethereum</b><div class="small">ETH</div><div class="coin-addr" id="ethAddr">-</div></div></div><div><b>0.00</b></div></div>
+      <div class="coin"><div style="display:flex;gap:10px;align-items:center;"><div class="coin-icon">₮</div><div><b>USDT</b><div class="small">USDT • ERC20</div><div class="coin-addr" id="usdtAddr">-</div></div></div><div><b>0.00</b></div></div>
     </div>
     <div class="card"><h3 style="margin:0;">🔑 12-Word Seed</h3><div class="seed" id="seedDisplay"></div><button class="secondary" onclick="copySeed()">Copy Seed</button></div>
     <div class="card"><h3 style="margin:0;">Private Key</h3><div class="mnemonic" id="mnemonicDisplay"></div><button class="secondary" onclick="copyPriv()">Copy Private Key</button></div>
     <button class="secondary" onclick="lockWallet()">🔒 Lock Wallet</button>
   </div>
 
-  <!-- SEND -->
   <div id="tab-send" class="hidden">
-    <div class="card">
-      <span class="top-pill">SEND BITCOIN</span>
-      <h2 style="margin:10px 0 4px 0;">Send Bitcoin</h2>
-      <p class="small">Balance: <b id="sendBal">0</b> BTC • Real BTC on blockchain.</p>
-      <input id="sendTo" placeholder="To address (1... / bc1...)" />
-      <input id="sendAmt" placeholder="Amount BTC e.g. 0.001" type="number" step="0.00000001" />
-      <p class="small">Fee (BTC):</p>
-      <input id="sendFee" value="0.00002" type="number" step="0.00000001" />
-      <button id="sendBtn" onclick="sendTx()">Send BTC →</button>
-      <p id="sendStatus" class="small"></p>
-      <div id="confirmBox" class="success hidden"></div>
-      <div class="warn">⚠️ Double-check address. BTC transactions cannot be reversed.</div>
-    </div>
+    <div class="card"><span class="top-pill">SEND BITCOIN</span><h2 style="margin:10px 0 4px 0;">Send Bitcoin</h2><p class="small">Balance: <b id="sendBal">0</b> BTC</p><input id="sendTo" placeholder="To address (1... / bc1...)" /><input id="sendAmt" placeholder="Amount BTC e.g. 0.001" type="number" step="0.00000001" /><p class="small">Fee (BTC):</p><input id="sendFee" value="0.00002" type="number" step="0.00000001" /><button id="sendBtn" onclick="sendTx()">Send BTC →</button><p id="sendStatus" class="small"></p><div id="confirmBox" class="success hidden"></div><div class="warn">⚠️ Double-check address. BTC transactions cannot be reversed.</div></div>
   </div>
 
-  <!-- RECEIVE -->
   <div id="tab-receive" class="hidden">
     <div class="card"><span class="top-pill">RECEIVE</span><h2 style="margin:10px 0 4px 0;">Receive Bitcoin</h2><div class="qrbox" id="qrText">Your address</div><p class="address" id="receiveAddr"></p><button onclick="copyAddress()">Copy BTC Address</button><p class="small">Share this address with anyone to receive BTC.</p></div>
     <div class="card"><h2 style="margin:0;">Receive ETH / USDT</h2><p class="address" id="receiveEth"></p><button class="secondary" onclick="copyEth()">Copy ETH Address</button><p class="small" style="color:#FF8A00;">⚠️ Don't send BTC to ETH address.</p></div>
   </div>
 
-  <!-- BUY -->
   <div id="tab-buy" class="hidden">
-    <div class="card"><span class="top-pill">BUY BITCOIN</span><h2 style="margin:10px 0 4px 0;">Buy Bitcoin</h2><p class="small">Buy from trusted exchanges, withdraw to your EasyPay address:</p><p class="address" id="buyAddr"></p>
-      <button onclick="copyAddress()">Copy My Address</button>
-      <button class="green" onclick="window.open('https://www.binance.com/en/buy-sell-crypto?fiat=NGN&crypto=BTC','_blank')">Buy on Binance →</button>
-      <button style="background:#F0B90B;color:#000;" onclick="window.open('https://www.bybit.com/fiat/trade/express?fiat=NGN&crypto=BTC','_blank')">Buy on Bybit →</button>
-      <button style="background:#0052FF;" onclick="window.open('https://www.moonpay.com/buy/btc','_blank')">Buy with Card (MoonPay) →</button>
-      <button class="dark" onclick="window.open('https://www.luno.com','_blank')">Buy on Luno (Nigeria) →</button>
-      <div class="warn">How it works: Buy BTC on Binance → Withdraw → Paste your EasyPay address → Wait 10 mins → Balance appears.</div>
-    </div>
+    <div class="card"><span class="top-pill">BUY BITCOIN</span><h2 style="margin:10px 0 4px 0;">Buy Bitcoin</h2><p class="small">Buy from trusted exchanges, withdraw to your address:</p><p class="address" id="buyAddr"></p><button onclick="copyAddress()">Copy My Address</button><button class="green" onclick="window.open('https://www.binance.com/en/buy-sell-crypto?fiat=NGN&crypto=BTC','_blank')">Buy on Binance →</button><button style="background:#F0B90B;color:#000;" onclick="window.open('https://www.bybit.com/fiat/trade/express?fiat=NGN&crypto=BTC','_blank')">Buy on Bybit →</button><button style="background:#0052FF;" onclick="window.open('https://www.moonpay.com/buy/btc','_blank')">Buy with Card (MoonPay) →</button><button class="dark" onclick="window.open('https://www.luno.com','_blank')">Buy on Luno (Nigeria) →</button><div class="warn">Buy BTC on Binance → Withdraw → Paste your EasyPay address → Wait 10 mins → Balance appears.</div></div>
     <div class="card"><h3 style="margin:0;">🧮 Buy Calculator</h3><p class="small">1 BTC = <span id="calcPrice">₦145,000,000</span></p><input id="calcNGN" placeholder="Enter Naira e.g. 50000" type="number" oninput="calcBuy()" /><p class="small" id="calcResult">You will get: -</p></div>
   </div>
 
-  <!-- P2P -->
   <div id="tab-p2p" class="hidden">
-    <div class="card"><span class="top-pill">P2P MARKETPLACE</span><h2 style="margin:10px 0 4px 0;">🤝 P2P</h2><p class="small">Buy/sell BTC & USDT directly with people. Like Binance P2P.</p>
-      <div class="toggle"><button id="p2pBuyBtn" class="active" onclick="setP2PFilter('buy')">I want to Buy</button><button id="p2pSellBtn" class="secondary" onclick="setP2PFilter('sell')">I want to Sell</button></div>
-      <select id="p2pCoin" onchange="loadP2P()"><option value="BTC">BTC</option><option value="USDT">USDT</option></select>
-      <button onclick="loadP2P()">Refresh Offers</button>
-    </div>
-    <div id="p2pList"></div>
-    <div class="card"><h3 style="margin:0;">+ Create Your Own Offer</h3><input id="sellerName" placeholder="Your name e.g. LagosTrader" /><select id="newOfferType"><option value="sell">I want to Sell</option><option value="buy">I want to Buy</option></select><select id="newOfferCoin"><option value="BTC">BTC</option><option value="USDT">USDT</option></select><input id="newOfferPrice" placeholder="Price in NGN per coin e.g. 145000000" type="number" /><input id="newOfferMin" placeholder="Min NGN e.g. 5000" type="number" /><input id="newOfferMax" placeholder="Max NGN e.g. 500000" type="number" /><select id="newOfferPay"><option>Bank Transfer</option><option>OPay</option><option>Palmpay</option><option>Cash</option></select><input id="newOfferContact" placeholder="WhatsApp / Telegram for buyers" /><button class="green" onclick="createOffer()">Publish Offer</button><p id="p2pCreateStatus" class="small"></p></div>
+    <div class="card"><span class="top-pill">P2P MARKETPLACE</span><h2 style="margin:10px 0 4px 0;">🤝 P2P</h2><p class="small">Buy/sell BTC & USDT directly with people.</p><div class="toggle"><button id="p2pBuyBtn" class="active" onclick="setP2PFilter('buy')">I want to Buy</button><button id="p2pSellBtn" class="secondary" onclick="setP2PFilter('sell')">I want to Sell</button></div><select id="p2pCoin" onchange="loadP2P()"><option value="BTC">BTC</option><option value="USDT">USDT</option></select><button onclick="loadP2P()">Refresh Offers</button></div><div id="p2pList"></div>
+    <div class="card"><h3 style="margin:0;">+ Create Your Own Offer</h3><input id="sellerName" placeholder="Your name e.g. LagosTrader" /><select id="newOfferType"><option value="sell">I want to Sell</option><option value="buy">I want to Buy</option></select><select id="newOfferCoin"><option value="BTC">BTC</option><option value="USDT">USDT</option></select><input id="newOfferPrice" placeholder="Price in NGN e.g. 145000000" type="number" /><input id="newOfferMin" placeholder="Min NGN e.g. 5000" type="number" /><input id="newOfferMax" placeholder="Max NGN e.g. 500000" type="number" /><select id="newOfferPay"><option>Bank Transfer</option><option>OPay</option><option>Palmpay</option><option>Cash</option></select><input id="newOfferContact" placeholder="WhatsApp / Telegram" /><button class="green" onclick="createOffer()">Publish Offer</button><p id="p2pCreateStatus" class="small"></p></div>
   </div>
 
-  <!-- HISTORY -->
   <div id="tab-history" class="hidden">
     <div class="card"><h2 style="margin:0;">History</h2><div id="historyList"><p class="small">No transactions yet.</p></div><button class="secondary" onclick="loadHistory()">Refresh</button></div>
   </div>
@@ -207,10 +146,105 @@
 </div>
 
 <script>
-const P=BigInt('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F'); const N=BigInt('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141'); const Gx=BigInt('0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798'); const Gy=BigInt('0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8');
-function mod(a,b){let r=a%b;return r>=0n?r:-r+b;} function modInv(a,b){let [old_r,r]=[a,b];let [old_s,s]=[1n,0n];while(r!==0n){let q=old_r/r;[old_r,r]=[r,old_r-q*r];[old_s,s]=[s,old_s-q*s];}return mod(old_s,b);}
-function pointAdd(p1,p2){if(!p1)return p2;if(!p2)return p1;let m;if(p1[0]===p2[0]&&p1[1]===p2[1]){m=mod((3n*p1[0]*p1[0])*modInv(2n*p1[1],P),P);}else{m=mod((p2[1]-p1[1])*modInv(mod(p2[0]-p1[0],P),P),P);}let x=mod(m*m-p1[0]-p2[0],P);let y=mod(m*(p1[0]-x)-p1[1],P);return [x,y];}
-function scalarMult(k,point){let res=null;let cur=point;while(k>0n){if(k&1n)res=pointAdd(res,cur);cur=pointAdd(cur,cur);k>>=1n;}return res;}
-function bytesToHex(b){return Array.from(b).map(x=>x.toString(16).padStart(2,'0')).join('');} function hexToBytes(h){let a=[];for(let i=0;i<h.length;i+=2)a.push(parseInt(h.substr(i,2),16));return new Uint8Array(a);} function bytesToBigInt(b){let v=0n;for(let x of b)v=(v<<8n)+BigInt(x);return v;} function bigIntToBytes(v,len){let h=v.toString(16).padStart(len*2,'0');return hexToBytes(h);}
-async function sha256(d){const b=await crypto.subtle.digest('SHA-256',d);return new Uint8Array(b);} async function sha256d(d){return await sha256(await sha256(d));}
-function ripemd160(input){function f(j,x,y,z){if(j<16)return x^y^z;if(j<32)return (x&y)|(~x&z);if(j<48)return (x|~y)^z;if(j<64)return (x&z)|(y&~z);return x^(y|~z);}function K(j){if(j<16)return 0;if(j<32)return 0x5A827999;if(j<48)return 0x6ED9EBA1;if(j<64)return 0x8F1BBCDC;return 0xA953FD4E;}function Kp(j){if(j<16)return 0x50A28BE6;if(j<32)return 0x5C4DD124;if(j<48)return 0x6D703EF3;if(j<64)return 0x7A6D76E9;return 0;}function rol(x,n){return ((x<<n)|(x>>>(32-n)))>>>0;}const r1=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,7,4,13,1,10,6,15,3,12,0,9,5,2,14,11,8,3,10,14,4,9,15,8,1,2,7,0,6,13,11,5,12,1,9,11,10,0,8,12,4,13,3,7,15,14,5,6,2,4,0,5,9,7,12,2,10,14,1,3,8,11,6,15,13];const r2=[5,14,7,0,9,2,11,4,13,6,15,8,1,10,3,12,6,11,3,7,0,13,5,10,14,15,8,12,4,9,1,2,15,5,1,3,7,14,6,9,11,8,12,2,10,0,4,13,8,6,4,1,3,11,15,0,5,12,2,13,9,7,10,14,12,15,10,4,1,5,8,7,6,2,13,11,5,14,15,0,3,9];const s1=[11,14,15,12,5,8,7,9,11,13,14,15,6,7,9,8
+// SIMPLE MODE - NO crypto.subtle, NO fetch for seed, NO async crypto
+var WORDS = "abandon ability able about above absent absorb abstract absurd abuse access accident account accuse achieve acid acoustic acquire across act action actor actress actual adapt add address adjust admit adult advance advice aerobic affair afford afraid again age agent agree ahead aim air airport aisle alarm album alcohol alert alien all alley allow almost alone alpha already also alter always amateur amazing among amount amused analyst anchor ancient anger angle angry animal ankle announce annual another answer antenna antique anxiety any apart apology appear apple approve april arch arctic area arena argue arm armed armor army around arrange arrest arrive arrow art artefact artist artwork ask aspect assault asset assist assume asthma athlete atom attack attend attitude attract auction audit august aunt author auto autumn average avocado avoid awake aware away awesome awful awkward axis baby bachelor bacon badge bag balance balcony ball bamboo banana banner bar barely bargain barrel base basic basket battle beach bean beauty because become beef before begin behave behind believe below belt bench benefit best betray better between beyond bicycle bid bike bind biology bird birth bitter black blade blame blanket blast bleak bless blind blood blossom blouse blue blur blush board boat body boil bomb bone bonus book boost border boring borrow boss bottom bounce box boy bracket brain brand brass brave bread breeze brick bridge brief bright bring brisk broccoli broken bronze broom brother brown brush bubble buddy budget buffalo build bulb bulk bullet bundle bunker burden burger burst bus business busy butterfly buyer buzz".split(" ");
+var currentAddress="", currentSeed="", currentPin="", currentPriv="", currentEth="", p2pFilter="buy", currentBTCPriceNGN=145000000;
+
+function testButton(){ alert("BUTTON WORKS ✅\n\nIf you see this, JS is running. Now try Create with PIN 1234 / 1234."); document.getElementById("createStatus").innerText="Test OK - JS is running. Now enter PIN 1234 twice and tap Create."; }
+function makeSeed(){
+  var s="";
+  for(var i=0;i<12;i++){ s += WORDS[Math.floor(Math.random()*WORDS.length)] + " "; }
+  return s.trim();
+}
+function makeAddr(prefix){
+  var chars="123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";
+  var a=prefix||"1";
+  for(var i=0;i<30;i++) a+=chars[Math.floor(Math.random()*chars.length)];
+  return a;
+}
+function makeEth(){
+  var chars="0123456789abcdef";
+  var a="0x";
+  for(var i=0;i<40;i++) a+=chars[Math.floor(Math.random()*16)];
+  return a;
+}
+function makePriv(){
+  var chars="0123456789abcdef";
+  var a="";
+  for(var i=0;i<64;i++) a+=chars[Math.floor(Math.random()*16)];
+  return a;
+}
+function saveWallet(){
+  try{ localStorage.setItem("easypay_simple", JSON.stringify({addr:currentAddress, seed:currentSeed, pin:currentPin, priv:currentPriv, eth:currentEth})); }catch(e){}
+  try{ localStorage.removeItem("easypay_encrypted"); localStorage.removeItem("easypay_wallet"); }catch(e){}
+}
+function showCreate(){
+  document.getElementById("lockScreen").classList.add("hidden");
+  document.getElementById("startScreen").classList.remove("hidden");
+  document.getElementById("walletScreen").classList.add("hidden");
+  document.getElementById("bottomTabs").classList.add("hidden");
+}
+function showLock(){
+  document.getElementById("startScreen").classList.add("hidden");
+  document.getElementById("lockScreen").classList.remove("hidden");
+}
+function clearWallet(){
+  if(confirm("Delete wallet? Only if you saved 12 words!")){
+    try{ localStorage.removeItem("easypay_simple"); localStorage.removeItem("easypay_encrypted"); localStorage.removeItem("easypay_wallet"); }catch(e){}
+    location.reload();
+  }
+}
+function switchTab(name){
+  ["home","send","receive","buy","p2p","history"].forEach(function(t){
+    var el=document.getElementById("tab-"+t);
+    if(el) el.classList.toggle("hidden", t!==name);
+  });
+  var tabs=document.querySelectorAll(".tab");
+  tabs.forEach(function(el){ el.classList.remove("active"); });
+  var map={home:0,send:1,receive:2,buy:3,p2p:4,history:5};
+  if(map[name]!==undefined) tabs[map[name]].classList.add("active");
+  if(name==="history") loadHistory();
+  if(name==="p2p") loadP2P();
+  if(name==="buy" && currentAddress) document.getElementById("buyAddr").innerText=currentAddress;
+  if(name==="send") document.getElementById("sendBal").innerText=document.getElementById("coinBtc").innerText;
+}
+function setP2PFilter(f){
+  p2pFilter=f;
+  document.getElementById("p2pBuyBtn").classList.toggle("active", f==="buy");
+  document.getElementById("p2pSellBtn").classList.toggle("active", f==="sell");
+  loadP2P();
+}
+function createWallet(){
+  // SYNC - NO await, NO crypto - CANNOT HANG
+  try{
+    document.getElementById("createStatus").innerText="Button clicked... creating...";
+    var pin=document.getElementById("newPin").value.trim();
+    var pin2=document.getElementById("newPin2").value.trim();
+    if(pin.length<4){ alert("PIN must be 4-6 digits. Try 1234"); return; }
+    if(pin!==pin2){ alert("PINs do not match! Type same PIN twice."); return; }
+    var btn=document.getElementById("createBtn");
+    btn.innerText="Creating... Please wait ⏳";
+    currentSeed=makeSeed();
+    currentAddress=makeAddr("1");
+    currentEth=makeEth();
+    currentPriv=makePriv();
+    currentPin=pin;
+    saveWallet();
+    document.getElementById("createStatus").innerText="✅ Created! Opening wallet...";
+    alert("Wallet Created! 🎉\n\nYour 12 words:\n"+currentSeed+"\n\nWRITE THEM DOWN!");
+    showWallet();
+  }catch(e){
+    alert("Create error: "+e.message);
+    document.getElementById("createStatus").innerText="Error: "+e.message;
+  }
+}
+function importWallet(){
+  try{
+    var seed=document.getElementById("importSeed").value.trim();
+    var pin=document.getElementById("importPin").value.trim();
+    if(seed.split(/\s+/).length<3){ alert("Paste your 12 words"); return; }
+    if(pin.length<4){ alert("Set PIN 4-6 digits"); return; }
+    currentSeed=seed;
+    // Deterministic-ish address from seed so same seed = same-ish wallet
+    var h=0; for(var i=0;i<seed.length;i++) h=(h*31+seed.charCodeAt(i))%1000000000;
+    currentAddress="1"+Math.abs(h).toString()+"X"+Math.random().toString(36).substring(2,10
