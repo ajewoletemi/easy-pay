@@ -1,114 +1,154 @@
 <!DOCTYPE html>
 <html>
 <head>
-<meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EasyPay - Send, Receive, Buy, P2P</title>
+<meta name="viewport" content="width=device-width, initial-scale=1.0, viewport-fit=cover">
+<title>EasyPay — Send, Receive, Buy, P2P</title>
 <style>
-  *{box-sizing:border-box}
-  body{background:#05070D;color:#0B0E14;font-family:Arial, sans-serif;margin:0;padding:0}
-  .container{padding:16px;max-width:520px;margin:0 auto;padding-bottom:100px}
-  .logo{color:#fff;font-size:30px;font-weight:900;text-align:center;margin-top:10px;letter-spacing:1px}
-  .logo span{color:#2E7DFF}
-  .subtitle{text-align:center;margin-top:4px}
-  .badge{background:#2E7DFF;color:#fff;font-size:11px;padding:6px 12px;border-radius:20px;display:inline-block;font-weight:bold;letter-spacing:.5px}
-  /* LIGHT ASH CARDS */
-  .card{background:#EDEFF2;border:1px solid #D6DAE0;border-radius:22px;padding:18px;margin-top:14px;box-shadow:0 6px 18px rgba(0,0,0,.35)}
-  .card-dark{background:#0F1420;color:#fff;border:1px solid #2E7DFF}
-  .balance{font-size:34px;font-weight:900;margin:8px 0;color:#0B0E14}
-  .balance span{color:#2E7DFF}
-  .small{color:#5A6472;font-size:12px}
-  .small-light{color:#AAB4C5;font-size:12px}
-  .warn{background:#FFF3D6;border:1px solid #FFB800;color:#7A5A00;padding:12px;border-radius:12px;font-size:12px;margin-top:10px}
-  .success{background:#D6F5E3;border:1px solid #00AA55;color:#006633;padding:12px;border-radius:12px;font-size:12px;margin-top:10px}
-  button{background:#2E7DFF;color:#fff;border:none;padding:15px;width:100%;border-radius:14px;font-size:15px;font-weight:bold;margin-top:10px;cursor:pointer;box-shadow:0 4px 12px rgba(46,125,255,.35)}
-  button.secondary{background:#fff;color:#0B0E14;border:1.5px solid #CBD0D8;box-shadow:none}
-  button.green{background:#00AA55;box-shadow:0 4px 12px rgba(0,170,85,.3)}
-  button.dark{background:#0B0E14;color:#fff}
+  *{box-sizing:border-box;-webkit-tap-highlight-color:transparent}
+  body{background:#04060C;color:#0B0E14;font-family:-apple-system,BlinkMacSystemFont,"Segoe UI",Roboto,Arial,sans-serif;margin:0;padding:0}
+  .container{padding:16px 16px 110px;max-width:520px;margin:0 auto}
+  /* HEADER */
+  .header{display:flex;justify-content:space-between;align-items:center;padding:10px 4px 6px}
+  .logo{font-size:28px;font-weight:900;letter-spacing:-.5px;color:#fff}
+  .logo span{color:#2E7DFF;background:linear-gradient(135deg,#2E7DFF,#00C6FF);-webkit-background-clip:text;-webkit-text-fill-color:transparent}
+  .avatar{width:40px;height:40px;border-radius:50%;background:linear-gradient(135deg,#2E7DFF,#00C6FF);display:flex;align-items:center;justify-content:center;color:#fff;font-weight:900;font-size:16px;box-shadow:0 4px 14px rgba(46,125,255,.5)}
+  .greet{color:#8A94A6;font-size:13px;margin:2px 0 0 4px}
+  .greet b{color:#fff;font-size:18px}
+  /* CARDS - LIGHT ASH + MODERN */
+  .card{background:#EDEFF2;border-radius:24px;padding:18px;margin-top:14px;box-shadow:0 8px 24px rgba(0,0,0,.35)}
+  .card-dark{background:linear-gradient(135deg,#0B1220 0%,#122A5A 55%,#2E7DFF 100%);color:#fff;border-radius:26px;padding:20px;box-shadow:0 12px 30px rgba(46,125,255,.35);position:relative;overflow:hidden}
+  .card-dark::after{content:"";position:absolute;right:-40px;top:-40px;width:150px;height:150px;background:radial-gradient(circle,rgba(255,255,255,.25),transparent 70%);border-radius:50%}
+  .balance-label{color:#C5D6FF;font-size:12px;letter-spacing:1px;font-weight:700}
+  .balance-big{font-size:36px;font-weight:900;margin:6px 0 2px;letter-spacing:-.5px}
+  .balance-big span{color:#7FB2FF;font-size:20px}
+  .pill-row{display:flex;gap:8px;margin-top:12px;flex-wrap:wrap}
+  .chip{background:rgba(255,255,255,.15);backdrop-filter:blur(8px);color:#fff;padding:7px 12px;border-radius:20px;font-size:12px;font-weight:600}
+  .chip-blue{background:#2E7DFF}
+  .small{color:#5A6472;font-size:12px;line-height:1.5}
+  .small-light{color:#C5D6FF;font-size:12px}
+  .warn{background:#FFF3D6;border:1px solid #FFB800;color:#7A5A00;padding:12px;border-radius:14px;font-size:12px;margin-top:10px;line-height:1.5}
+  .success{background:#D6F5E3;border:1px solid #00AA55;color:#006633;padding:12px;border-radius:14px;font-size:12px;margin-top:10px}
+  .error{background:#FFE3E3;border:1px solid #FF3B30;color:#8B0000;padding:12px;border-radius:14px;font-size:12px;margin-top:10px}
+  /* BUTTONS */
+  button{background:linear-gradient(135deg,#2E7DFF,#00A3FF);color:#fff;border:none;padding:16px;width:100%;border-radius:16px;font-size:15px;font-weight:800;margin-top:10px;cursor:pointer;box-shadow:0 6px 16px rgba(46,125,255,.35);transition:.15s}
+  button:active{transform:scale(.98)}
+  button.secondary{background:#fff;color:#0B0E14;border:1.5px solid #D6DAE0;box-shadow:none}
+  button.green{background:linear-gradient(135deg,#00C853,#00E676);box-shadow:0 6px 16px rgba(0,200,83,.3)}
+  button.dark{background:#0B0E14;box-shadow:none}
   button.half{width:48%}
-  input,select{width:100%;padding:14px;background:#fff;color:#0B0E14;border:1.5px solid #CBD0D8;border-radius:12px;font-size:14px;margin-top:10px;outline:none}
-  input:focus,select:focus,textarea:focus{border-color:#2E7DFF;box-shadow:0 0 0 3px rgba(46,125,255,.15)}
-  textarea{width:100%;padding:14px;background:#fff;color:#0B0E14;border:1.5px solid #CBD0D8;border-radius:12px;font-size:14px;margin-top:10px;min-height:70px;outline:none}
-  .address{background:#fff;padding:12px;border-radius:10px;word-break:break-all;font-size:13px;margin:8px 0;border:1px solid #CBD0D8;color:#0B0E14}
-  .seed{background:#0B0E14;border:2px solid #2E7DFF;color:#fff;padding:14px;border-radius:12px;word-break:break-word;line-height:1.8;font-size:15px;font-weight:bold;text-align:center}
+  button:disabled{opacity:.6}
+  input,select{width:100%;padding:15px;background:#fff;color:#0B0E14;border:1.5px solid #D6DAE0;border-radius:14px;font-size:14px;margin-top:10px;outline:none}
+  input:focus,select:focus,textarea:focus{border-color:#2E7DFF;box-shadow:0 0 0 4px rgba(46,125,255,.15)}
+  textarea{width:100%;padding:14px;background:#fff;color:#0B0E14;border:1.5px solid #D6DAE0;border-radius:14px;font-size:14px;margin-top:10px;min-height:70px;outline:none}
+  .address{background:#fff;padding:13px;border-radius:12px;word-break:break-all;font-size:13px;margin:8px 0;border:1px solid #D6DAE0}
+  .seed{background:#0B0E14;border:2px solid #2E7DFF;color:#fff;padding:14px;border-radius:14px;word-break:break-word;line-height:1.8;font-size:15px;font-weight:700;text-align:center}
   .mnemonic{background:#FFF8D6;border:1.5px solid #FFB800;color:#5A4A00;padding:12px;border-radius:12px;word-break:break-all;font-size:11px}
   .hidden{display:none}
-  .coin{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #D6DAE0;gap:10px}
+  /* QUICK ACTIONS - MODERN */
+  .actions{display:grid;grid-template-columns:repeat(4,1fr);gap:10px;margin-top:16px}
+  .action{background:#fff;border-radius:18px;padding:14px 6px;text-align:center;cursor:pointer;border:1px solid #E2E6EC;box-shadow:0 2px 8px rgba(0,0,0,.05)}
+  .action:active{transform:scale(.96)}
+  .action-icon{width:44px;height:44px;border-radius:50%;margin:0 auto 6px;display:flex;align-items:center;justify-content:center;font-size:20px;color:#fff}
+  .action b{font-size:12px;color:#0B0E14}
+  .action small{display:block;color:#5A6472;font-size:10px}
+  .coin{display:flex;justify-content:space-between;align-items:center;padding:13px 0;border-bottom:1px solid #E2E6EC;gap:10px}
   .coin:last-child{border-bottom:none}
   .coin-addr{font-size:11px;color:#5A6472;word-break:break-all}
-  .coin-icon{width:38px;height:38px;border-radius:50%;background:#fff;border:1.5px solid #D6DAE0;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
-  .tx{padding:12px 0;border-bottom:1px solid #D6DAE0;font-size:13px}
-  .tabs{position:fixed;bottom:0;left:0;right:0;background:#0B0E14;border-top:2px solid #2E7DFF;display:flex;justify-content:space-around;padding:8px 0 10px;max-width:520px;margin:0 auto;z-index:99}
-  .tab{color:#8A94A6;font-size:11px;text-align:center;cursor:pointer;padding:6px 6px;border-radius:12px;flex:1}
+  .coin-icon{width:42px;height:42px;border-radius:50%;background:#fff;border:1.5px solid #E2E6EC;display:flex;align-items:center;justify-content:center;font-size:19px;flex-shrink:0}
+  .tx{padding:12px 0;border-bottom:1px solid #E2E6EC;font-size:13px}
+  .tabs{position:fixed;bottom:0;left:0;right:0;background:rgba(5,7,13,.96);backdrop-filter:blur(12px);border-top:1px solid #1A2233;display:flex;justify-content:space-around;padding:10px 0 calc(10px + env(safe-area-inset-bottom));max-width:520px;margin:0 auto;z-index:99}
+  .tab{color:#8A94A6;font-size:11px;text-align:center;cursor:pointer;padding:6px 6px;border-radius:14px;flex:1}
   .tab.active{color:#fff;background:#2E7DFF}
   .tab span{display:block;font-size:20px}
   .qrbox{background:#0B0E14;color:#fff;padding:14px;border-radius:14px;text-align:center;font-size:11px;word-break:break-all;margin-top:10px;border:1px solid #2E7DFF}
-  .toggle{display:flex;gap:8px;margin-top:10px}
-  .toggle button{flex:1;padding:12px;font-size:13px;box-shadow:none}
-  .toggle button.active{border:2px solid #0B0E14;background:#0B0E14}
-  .p2p-card{background:#fff;border:1.5px solid #D6DAE0;border-radius:16px;padding:14px;margin-top:10px}
-  .pill{font-size:11px;padding:4px 10px;border-radius:20px;display:inline-block;font-weight:bold;color:#fff}
-  .pill-buy{background:#00AA55} .pill-sell{background:#FF3B30}
-  .buy-btn-binance{background:#F0B90B;color:#000} .buy-btn-bybit{background:#F7A600;color:#000} .buy-btn-moonpay{background:#0052FF} .buy-btn-luno{background:#0B0E14}
-  .top-pill{display:inline-block;background:#E8F0FF;color:#2E7DFF;padding:5px 10px;border-radius:20px;font-size:11px;font-weight:bold}
+  .toggle{display:flex;gap:8px;margin-top:10px;background:#E2E6EC;padding:4px;border-radius:14px}
+  .toggle button{flex:1;padding:12px;font-size:13px;box-shadow:none;margin:0;border-radius:10px}
+  .toggle button.active{background:#0B0E14;color:#fff}
+  .p2p-card{background:#fff;border:1.5px solid #E2E6EC;border-radius:18px;padding:14px;margin-top:10px;box-shadow:0 2px 10px rgba(0,0,0,.05)}
+  .pill{font-size:11px;padding:5px 10px;border-radius:20px;display:inline-block;font-weight:800;color:#fff}
+  .pill-buy{background:#00C853} .pill-sell{background:#FF3B30}
+  .section-title{font-size:16px;font-weight:900;margin:0}
+  .top-pill{display:inline-block;background:#E8F0FF;color:#2E7DFF;padding:6px 12px;border-radius:20px;font-size:11px;font-weight:800}
   h2,h3{color:#0B0E14}
+  .step{display:flex;gap:10px;align-items:flex-start;padding:10px 0;border-bottom:1px solid #E2E6EC}
+  .step:last-child{border-bottom:none}
+  .step-num{width:28px;height:28px;border-radius:50%;background:#2E7DFF;color:#fff;display:flex;align-items:center;justify-content:center;font-weight:900;font-size:13px;flex-shrink:0}
 </style>
 </head>
 <body>
 <div class="container">
-<div class="logo">EASY<span>PAY</span></div>
-<div class="subtitle"><span class="badge">WALLET • SEND • RECEIVE • BUY • P2P</span></div>
+<div class="header"><div class="logo">Easy<span>Pay</span></div><div class="avatar">E</div></div>
+<p class="greet">Welcome to <br><b>Your Money, Your Control.</b></p>
 
-<!-- LOCK / START -->
-<div id="lockScreen" class="hidden">
-  <div class="card"><h2 style="margin:0;">Welcome Back 🔒</h2><p class="small">Enter PIN to unlock</p><input id="unlockPin" type="password" placeholder="••••" maxlength="6" inputmode="numeric" /><button onclick="unlockWallet()">Unlock Wallet</button><button class="secondary" onclick="forgetWallet()">Forgot PIN / Different Wallet</button><p id="unlockErr" class="small" style="color:#FF3B30;"></p></div>
+<!-- FIX: SHOW IF OLD WALLET BLOCKS CREATE -->
+<div id="stuckBox" class="card hidden" style="border:2px solid #FF3B30;">
+  <h3 style="margin:0;color:#FF3B30;">⚠️ Old wallet found</h3>
+  <p class="small">Your phone has an old test wallet that is blocking Create. Tap below to clear it and start fresh (only if you saved your 12 words).</p>
+  <button class="secondary" onclick="clearOldWallet()">🗑️ Clear Old Wallet & Start Fresh</button>
+  <button onclick="showLock()">I Remember My PIN — Go to Login</button>
 </div>
+
+<!-- LOCK -->
+<div id="lockScreen" class="hidden">
+  <div class="card"><h2 style="margin:0;">Welcome Back 👋</h2><p class="small">Enter your PIN to unlock</p><input id="unlockPin" type="password" placeholder="••••" maxlength="6" inputmode="numeric" /><button onclick="unlockWallet()">Unlock Wallet</button><p id="unlockErr" class="small" style="color:#FF3B30;"></p><button class="secondary" onclick="showCreate()">Forgot PIN? Create / Import New Wallet</button><button class="secondary" onclick="clearOldWallet()">🗑️ Delete Wallet / Start Fresh</button></div>
+</div>
+
 <div id="startScreen">
   <div class="card">
-    <h2 style="margin:0;">Create Wallet</h2><p class="small">12-word seed phrase = your wallet. Write it down.</p>
+    <span class="top-pill">✦ SECURE WALLET ✦</span>
+    <h2 style="margin:10px 0 4px 0;">Create Wallet</h2><p class="small">12-word seed phrase = your wallet. Write it down and keep it safe.</p>
     <input id="newPin" type="password" placeholder="Create 4-6 digit PIN" maxlength="6" inputmode="numeric" />
     <input id="newPin2" type="password" placeholder="Confirm PIN" maxlength="6" inputmode="numeric" />
     <button id="createBtn" onclick="createWallet()">+ Create New Wallet</button>
-    <button class="secondary" onclick="document.getElementById('importBox').classList.toggle('hidden')">Import Wallet</button>
+    <button class="secondary" onclick="document.getElementById('importBox').classList.toggle('hidden')">Import Existing Wallet</button>
     <div id="importBox" class="hidden"><textarea id="importSeed" placeholder="12 words OR 64-char hex..."></textarea><input id="importPin" type="password" placeholder="Set PIN" maxlength="6" inputmode="numeric" /><button onclick="importWallet()">Sign In</button></div>
     <div class="warn">⚠️ Seed + PIN = your money. Lose seed = lose money.</div>
     <p id="createStatus" class="small"></p>
+    <div id="debugBox" class="small" style="background:#F1F3F6;padding:10px;border-radius:10px;margin-top:10px;"></div>
   </div>
-  <div class="card" style="text-align:center;">
-    <span class="top-pill">✦ NEW LOOK ✦</span>
-    <h3 style="margin:10px 0 4px 0;">Black • Light Ash • Blue</h3>
-    <p class="small">Send, Receive, Buy & P2P — all in one clean wallet.</p>
+  <div class="card">
+    <h3 style="margin:0;">How it works</h3>
+    <div class="step"><div class="step-num">1</div><div><b>Create wallet</b><div class="small">Set PIN, save 12 words</div></div></div>
+    <div class="step"><div class="step-num">2</div><div><b>Receive BTC</b><div class="small">Share your address, get BTC</div></div></div>
+    <div class="step"><div class="step-num">3</div><div><b>Send / Buy / P2P</b><div class="small">Send to anyone, buy on exchange, trade P2P</div></div></div>
   </div>
 </div>
 
 <div id="walletScreen" class="hidden">
-  <!-- HOME -->
+  <!-- HOME - MODERN -->
   <div id="tab-home">
-    <div class="card card-dark">
-      <p class="small-light" style="margin:0;">TOTAL BALANCE</p>
-      <div class="balance" style="color:#fff;">0.00000000 <span>BTC</span></div>
-      <div class="balance" id="balanceDisplay" style="display:none;">0.00000000 BTC</div>
+    <div class="card-dark">
+      <p class="balance-label">TOTAL BALANCE</p>
+      <div class="balance-big" id="bigBalance">0.00000000 <span>BTC</span></div>
       <p class="small-light">≈ $<span id="usdDisplay">0.00</span> • On-chain: <span id="onchainDisplay">0</span> sats</p>
-      <p id="addressDisplay" class="address" style="background:#1A2233;color:#fff;border-color:#2E7DFF;"></p>
-      <div style="display:flex;gap:8px;"><button class="half" onclick="switchTab('send')">↑ Send</button><button class="half secondary" style="background:#fff;" onclick="switchTab('receive')">↓ Receive</button></div>
-      <div style="display:flex;gap:8px;"><button class="half green" onclick="switchTab('buy')">💳 Buy BTC</button><button class="half secondary" style="background:#fff;" onclick="switchTab('p2p')">🤝 P2P</button></div>
-      <button class="secondary" style="background:#fff;" onclick="checkBalance();loadHistory()">Refresh</button>
-      <button class="secondary" style="background:transparent;color:#fff;border-color:#333;" onclick="lockWallet()">🔒 Lock</button>
+      <div class="pill-row"><span class="chip chip-blue">● Live</span><span class="chip" id="addressShort">—</span></div>
+      <div id="balanceDisplay" style="display:none;">0.00000000 BTC</div>
+      <p id="addressDisplay" class="address" style="background:rgba(255,255,255,.12);color:#fff;border-color:rgba(255,255,255,.25);"></p>
     </div>
-    <div class="card"><h3 style="margin:0 0 8px 0;">Your Coins</h3>
-      <div class="coin"><div style="display:flex;gap:10px;align-items:center;"><div class="coin-icon">₿</div><div><b>Bitcoin</b><div class="small">BTC</div><div class="coin-addr" id="btcAddr">-</div></div></div><div style="text-align:right"><b id="coinBtc">0.00000000</b></div></div>
-      <div class="coin"><div style="display:flex;gap:10px;align-items:center;"><div class="coin-icon">Ξ</div><div><b>Ethereum</b><div class="small">ETH</div><div class="coin-addr" id="ethAddr">-</div></div></div><div style="text-align:right"><b>0.00</b></div></div>
-      <div class="coin"><div style="display:flex;gap:10px;align-items:center;"><div class="coin-icon">₮</div><div><b>USDT</b><div class="small">USDT • ERC20</div><div class="coin-addr" id="usdtAddr">-</div></div></div><div style="text-align:right"><b>0.00</b></div></div>
+
+    <div class="actions">
+      <div class="action" onclick="switchTab('send')"><div class="action-icon" style="background:linear-gradient(135deg,#2E7DFF,#00A3FF);">↑</div><b>Send</b><small>Bitcoin</small></div>
+      <div class="action" onclick="switchTab('receive')"><div class="action-icon" style="background:linear-gradient(135deg,#00C853,#00E676);">↓</div><b>Receive</b><small>Bitcoin</small></div>
+      <div class="action" onclick="switchTab('buy')"><div class="action-icon" style="background:linear-gradient(135deg,#FF8A00,#FFB800);">💳</div><b>Buy</b><small>BTC</small></div>
+      <div class="action" onclick="switchTab('p2p')"><div class="action-icon" style="background:linear-gradient(135deg,#7C4DFF,#B388FF);">🤝</div><b>P2P</b><small>Trade</small></div>
+    </div>
+
+    <div class="card"><div style="display:flex;justify-content:space-between;align-items:center;"><h3 class="section-title">Your Coins</h3><span class="top-pill" onclick="checkBalance();loadHistory()">↻ Refresh</span></div>
+      <div class="coin"><div style="display:flex;gap:10px;align-items:center;"><div class="coin-icon">₿</div><div><b>Bitcoin</b><div class="small">BTC</div><div class="coin-addr" id="btcAddr">-</div></div></div><div style="text-align:right"><b id="coinBtc">0.00000000</b><div class="small">BTC</div></div></div>
+      <div class="coin"><div style="display:flex;gap:10px;align-items:center;"><div class="coin-icon">Ξ</div><div><b>Ethereum</b><div class="small">ETH</div><div class="coin-addr" id="ethAddr">-</div></div></div><div style="text-align:right"><b>0.00</b><div class="small">ETH</div></div></div>
+      <div class="coin"><div style="display:flex;gap:10px;align-items:center;"><div class="coin-icon">₮</div><div><b>USDT</b><div class="small">USDT • ERC20</div><div class="coin-addr" id="usdtAddr">-</div></div></div><div style="text-align:right"><b>0.00</b><div class="small">USDT</div></div></div>
     </div>
     <div class="card"><h3 style="margin:0;">🔑 12-Word Seed</h3><div class="seed" id="seedDisplay"></div><button class="secondary" onclick="copySeed()">Copy Seed</button></div>
     <div class="card"><h3 style="margin:0;">Private Key</h3><div class="mnemonic" id="mnemonicDisplay"></div><button class="secondary" onclick="copyPriv()">Copy Private Key</button></div>
+    <button class="secondary" onclick="lockWallet()">🔒 Lock Wallet</button>
   </div>
 
   <!-- SEND -->
   <div id="tab-send" class="hidden">
     <div class="card">
-      <h2 style="margin:0;">Send Bitcoin</h2>
-      <p class="small">Balance: <span id="sendBal">0</span> BTC</p>
-      <p class="small">Real BTC: On blockchain, costs fee.</p>
+      <span class="top-pill">SEND BITCOIN</span>
+      <h2 style="margin:10px 0 4px 0;">Send Bitcoin</h2>
+      <p class="small">Balance: <b id="sendBal">0</b> BTC • Real BTC on blockchain.</p>
       <input id="sendTo" placeholder="To address (1... / bc1...)" />
       <input id="sendAmt" placeholder="Amount BTC e.g. 0.001" type="number" step="0.00000001" />
       <p class="small">Fee (BTC):</p>
@@ -122,18 +162,18 @@
 
   <!-- RECEIVE -->
   <div id="tab-receive" class="hidden">
-    <div class="card"><h2 style="margin:0;">Receive Bitcoin</h2><div class="qrbox" id="qrText">Your address</div><p class="address" id="receiveAddr"></p><button onclick="copyAddress()">Copy BTC Address</button><p class="small">Share this address with anyone to receive BTC.</p></div>
+    <div class="card"><span class="top-pill">RECEIVE</span><h2 style="margin:10px 0 4px 0;">Receive Bitcoin</h2><div class="qrbox" id="qrText">Your address</div><p class="address" id="receiveAddr"></p><button onclick="copyAddress()">Copy BTC Address</button><p class="small">Share this address with anyone to receive BTC.</p></div>
     <div class="card"><h2 style="margin:0;">Receive ETH / USDT</h2><p class="address" id="receiveEth"></p><button class="secondary" onclick="copyEth()">Copy ETH Address</button><p class="small" style="color:#FF8A00;">⚠️ Don't send BTC to ETH address.</p></div>
   </div>
 
   <!-- BUY -->
   <div id="tab-buy" class="hidden">
-    <div class="card"><h2 style="margin:0;">💳 Buy Bitcoin</h2><p class="small">Buy from trusted exchanges, withdraw to your EasyPay address:</p><p class="address" id="buyAddr"></p>
+    <div class="card"><span class="top-pill">BUY BITCOIN</span><h2 style="margin:10px 0 4px 0;">Buy Bitcoin</h2><p class="small">Buy from trusted exchanges, withdraw to your EasyPay address:</p><p class="address" id="buyAddr"></p>
       <button onclick="copyAddress()">Copy My Address</button>
       <button class="green" onclick="window.open('https://www.binance.com/en/buy-sell-crypto?fiat=NGN&crypto=BTC','_blank')">Buy on Binance →</button>
-      <button class="buy-btn-binance" onclick="window.open('https://www.bybit.com/fiat/trade/express?fiat=NGN&crypto=BTC','_blank')">Buy on Bybit →</button>
-      <button class="buy-btn-moonpay" onclick="window.open('https://www.moonpay.com/buy/btc','_blank')">Buy with Card (MoonPay) →</button>
-      <button class="buy-btn-luno" onclick="window.open('https://www.luno.com','_blank')">Buy on Luno (Nigeria) →</button>
+      <button style="background:#F0B90B;color:#000;" onclick="window.open('https://www.bybit.com/fiat/trade/express?fiat=NGN&crypto=BTC','_blank')">Buy on Bybit →</button>
+      <button style="background:#0052FF;" onclick="window.open('https://www.moonpay.com/buy/btc','_blank')">Buy with Card (MoonPay) →</button>
+      <button class="dark" onclick="window.open('https://www.luno.com','_blank')">Buy on Luno (Nigeria) →</button>
       <div class="warn">How it works: Buy BTC on Binance → Withdraw → Paste your EasyPay address → Wait 10 mins → Balance appears.</div>
     </div>
     <div class="card"><h3 style="margin:0;">🧮 Buy Calculator</h3><p class="small">1 BTC = <span id="calcPrice">₦145,000,000</span></p><input id="calcNGN" placeholder="Enter Naira e.g. 50000" type="number" oninput="calcBuy()" /><p class="small" id="calcResult">You will get: -</p></div>
@@ -141,7 +181,7 @@
 
   <!-- P2P -->
   <div id="tab-p2p" class="hidden">
-    <div class="card"><h2 style="margin:0;">🤝 P2P Marketplace</h2><p class="small">Buy/sell BTC & USDT directly with people. Like Binance P2P.</p>
+    <div class="card"><span class="top-pill">P2P MARKETPLACE</span><h2 style="margin:10px 0 4px 0;">🤝 P2P</h2><p class="small">Buy/sell BTC & USDT directly with people. Like Binance P2P.</p>
       <div class="toggle"><button id="p2pBuyBtn" class="active" onclick="setP2PFilter('buy')">I want to Buy</button><button id="p2pSellBtn" class="secondary" onclick="setP2PFilter('sell')">I want to Sell</button></div>
       <select id="p2pCoin" onchange="loadP2P()"><option value="BTC">BTC</option><option value="USDT">USDT</option></select>
       <button onclick="loadP2P()">Refresh Offers</button>
@@ -173,30 +213,4 @@ function pointAdd(p1,p2){if(!p1)return p2;if(!p2)return p1;let m;if(p1[0]===p2[0
 function scalarMult(k,point){let res=null;let cur=point;while(k>0n){if(k&1n)res=pointAdd(res,cur);cur=pointAdd(cur,cur);k>>=1n;}return res;}
 function bytesToHex(b){return Array.from(b).map(x=>x.toString(16).padStart(2,'0')).join('');} function hexToBytes(h){let a=[];for(let i=0;i<h.length;i+=2)a.push(parseInt(h.substr(i,2),16));return new Uint8Array(a);} function bytesToBigInt(b){let v=0n;for(let x of b)v=(v<<8n)+BigInt(x);return v;} function bigIntToBytes(v,len){let h=v.toString(16).padStart(len*2,'0');return hexToBytes(h);}
 async function sha256(d){const b=await crypto.subtle.digest('SHA-256',d);return new Uint8Array(b);} async function sha256d(d){return await sha256(await sha256(d));}
-function ripemd160(input){function f(j,x,y,z){if(j<16)return x^y^z;if(j<32)return (x&y)|(~x&z);if(j<48)return (x|~y)^z;if(j<64)return (x&z)|(y&~z);return x^(y|~z);}function K(j){if(j<16)return 0;if(j<32)return 0x5A827999;if(j<48)return 0x6ED9EBA1;if(j<64)return 0x8F1BBCDC;return 0xA953FD4E;}function Kp(j){if(j<16)return 0x50A28BE6;if(j<32)return 0x5C4DD124;if(j<48)return 0x6D703EF3;if(j<64)return 0x7A6D76E9;return 0;}function rol(x,n){return ((x<<n)|(x>>>(32-n)))>>>0;}const r1=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,7,4,13,1,10,6,15,3,12,0,9,5,2,14,11,8,3,10,14,4,9,15,8,1,2,7,0,6,13,11,5,12,1,9,11,10,0,8,12,4,13,3,7,15,14,5,6,2,4,0,5,9,7,12,2,10,14,1,3,8,11,6,15,13];const r2=[5,14,7,0,9,2,11,4,13,6,15,8,1,10,3,12,6,11,3,7,0,13,5,10,14,15,8,12,4,9,1,2,15,5,1,3,7,14,6,9,11,8,12,2,10,0,4,13,8,6,4,1,3,11,15,0,5,12,2,13,9,7,10,14,12,15,10,4,1,5,8,7,6,2,13,11,5,14,15,0,3,9];const s1=[11,14,15,12,5,8,7,9,11,13,14,15,6,7,9,8,7,6,8,13,11,9,7,15,7,12,15,9,11,7,13,12,11,13,6,7,14,9,13,15,14,8,13,6,5,12,7,5,11,12,14,15,14,15,9,8,9,14,5,6,8,6,5,12,9,15,5,11,6,8,13,12,5,12,13,14,11,8,5,6];const s2=[8,9,9,11,13,15,15,5,7,7,8,11,14,14,12,6,9,13,15,7,12,8,9,11,7,7,12,7,6,15,13,11,9,7,15,11,8,6,6,14,12,13,5,14,13,13,7,5,15,5,8,11,14,14,6,14,6,9,12,9,12,5,15,8,8,5,12,9,12,5,14,6,8,13,6,5,15,13,11,11];let msg=Array.from(input);let ml=msg.length*8;msg.push(0x80);while((msg.length%64)!==56)msg.push(0);for(let i=0;i<8;i++)msg.push((ml>>(i*8))&0xff);let h0=0x67452301,h1=0xEFCDAB89,h2=0x98BADCFE,h3=0x10325476,h4=0xC3D2E1F0;for(let off=0;off<msg.length;off+=64){let X=[];for(let i=0;i<16;i++)X.push(msg[off+i*4]|(msg[off+i*4+1]<<8)|(msg[off+i*4+2]<<16)|(msg[off+i*4+3]<<24));let al=h0,bl=h1,cl=h2,dl=h3,el=h4;let alp=h0,blp=h1,clp=h2,dlp=h3,elp=h4;for(let j=0;j<80;j++){let t=(rol((al+f(j,bl,cl,dl)+X[r1[j]]+K(j))>>>0,s1[j])+el)>>>0;al=el;el=dl;dl=rol(cl,10);cl=bl;bl=t;let tp=(rol((alp+f(79-j,blp,clp,dlp)+X[r2[j]]+Kp(j))>>>0,s2[j])+elp)>>>0;alp=elp;elp=dlp;dlp=rol(clp,10);clp=blp;blp=tp;}let t=(h1+cl+dlp)>>>0;h1=(h2+dl+elp)>>>0;h2=(h3+el+alp)>>>0;h3=(h4+al+blp)>>>0;h4=(h0+bl+clp)>>>0;h0=t;}let out=new Uint8Array(20);[h0,h1,h2,h3,h4].forEach((h,i)=>{out[i*4]=h&0xff;out[i*4+1]=(h>>8)&0xff;out[i*4+2]=(h>>16)&0xff;out[i*4+3]=(h>>24)&0xff;});return out;}
-const B58='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz'; function base58Encode(b){let n=bytesToBigInt(b);let s='';while(n>0n){let r=n%58n;n=n/58n;s=B58[Number(r)]+s;}for(let x of b){if(x===0)s='1'+s;else break;}return s;} function base58Decode(str){let n=0n;for(let c of str){n=n*58n+BigInt(B58.indexOf(c));}let hex=n.toString(16);if(hex.length%2)hex='0'+hex;let bytes=hexToBytes(hex);let leading=0;for(let c of str){if(c==='1')leading++;else break;}let out=new Uint8Array(leading+bytes.length);out.set(bytes,leading);return out;}
-function getPubKeyCompressed(priv){let k=bytesToBigInt(priv)%N;if(k===0n)k=1n;let pub=scalarMult(k,[Gx,Gy]);let xb=bigIntToBytes(pub[0],32);let p=(pub[1]%2n===0n)?0x02:0x03;let c=new Uint8Array(33);c[0]=p;c.set(xb,1);return c;}
-async function privKeyToAddress(priv){let comp=getPubKeyCompressed(priv);let h1=await sha256(comp);let h2=ripemd160(h1);let payload=new Uint8Array(21);payload[0]=0;payload.set(h2,1);let chk=await sha256d(payload);let full=new Uint8Array(25);full.set(payload,0);full.set(chk.slice(0,4),21);return base58Encode(full);}
-function addressToHash160(a){let d=base58Decode(a);return d.slice(1,21);}
-function keccak256(input){const RC=[0x00000001,0x00008082,0x0000808a,0x80008000,0x0000808b,0x80000001,0x80008081,0x80008009,0x0000008a,0x00000088,0x80008009,0x8000000a,0x8000808b,0x0000008b,0x80008089,0x80008003,0x80008002,0x80000080,0x0000800a,0x8000000a,0x80008081,0x80000080,0x00008000,0x80008008,0x80008008,0x80000080,0x80008088];const ROT=[0,1,62,28,27,36,44,6,55,20,3,10,43,25,39,41,45,15,21,8,18,2,61,56,14];const PI=[10,7,11,17,18,3,5,16,8,21,24,4,15,23,19,13,12,2,20,14,22,9,6,1];let state=new Array(25).fill(0);let stateHi=new Array(25).fill(0);function keccakF(){for(let round=0;round<24;round++){let C=new Array(5).fill(0),Chi=new Array(5).fill(0);for(let x=0;x<5;x++){C[x]=state[x]^state[x+5]^state[x+10]^state[x+15]^state[x+20];}for(let x=0;x<5;x++){let d=C[(x+4)%5]^((C[(x+1)%5]<<1)|(C[(x+1)%5]>>>31));for(let y=0;y<25;y+=5){state[y+x]^=d;}}let last=state[1];let lastHi=stateHi[1];for(let i=0;i<24;i++){let idx=PI[i];let t=state[idx];let tHi=stateHi[idx];let rot=ROT[i];let newVal,newHi;if(rot<32){newVal=(t<<rot)|(tHi>>>(32-rot));newHi=(tHi<<rot)|(t>>>(32-rot));}else{let r=rot-32;newVal=(tHi<<r)|(t>>>(32-r));newHi=(t<<r)|(tHi>>>(32-r));}state[idx]=last;stateHi[idx]=lastHi;last=newVal;lastHi=newHi;}for(let y=0;y<25;y+=5){for(let x=0;x<5;x++){Chi[x]=state[y+x];}for(let x=0;x<5;x++){state[y+x]^=(~Chi[(x+1)%5])&Chi[(x+2)%5];}}state[0]^=RC[round];}}let msg=Array.from(input);msg.push(0x01);while(msg.length%136!==136-1)msg.push(0);msg.push(0x80);for(let off=0;off<msg.length;off+=136){for(let i=0;i<17;i++){let v=0;for(let b=0;b<8;b++)v|=msg[off+i*8+b]<<(b*8);state[i]^=v>>>0;}keccakF();}let out=new Uint8Array(32);for(let i=0;i<4;i++){let v=state[i];for(let b=0;b<8;b++)out[i*8+b]=(v>>(b*8))&0xff;}return out;}
-function ethAddressFromPriv(priv){let k=bytesToBigInt(priv)%N;let pub=scalarMult(k,[Gx,Gy]);let x=bigIntToBytes(pub[0],32);let y=bigIntToBytes(pub[1],32);let pub64=new Uint8Array(64);pub64.set(x,0);pub64.set(y,32);let h=keccak256(pub64);return '0x'+bytesToHex(h.slice(12));}
-let WORDLIST=null;
-async function getWordlist(){
-  if(WORDLIST) return WORDLIST;
-  const urls=['https://cdn.jsdelivr.net/gh/bitcoin/bips@master/bip-0039/english.txt','https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt'];
-  for(let url of urls){
-    try{ const r=await fetch(url); if(!r.ok) continue; const t=await r.text(); let list; if(t.trim().startsWith('[')){ list=JSON.parse(t); } else { list=t.trim().split('\n'); } if(list.length>=2048){ WORDLIST=list; return WORDLIST; } }catch(e){}
-  }
-  const base="abandon ability able about above absent absorb abstract absurd abuse access accident account accuse achieve acid acoustic acquire across act action actor actress actual adapt add address adjust admit adult advance advice aerobic affair afford afraid again age agent agree ahead aim air airport aisle alarm album alcohol alert alien all alley allow almost alone alpha already also alter always amateur amazing among amount amused analyst anchor ancient anger angle angry animal ankle announce annual another answer antenna antique anxiety any apart apology appear apple approve april arch arctic area arena argue arm armed armor army around arrange arrest arrive arrow art artefact artist artwork ask aspect assault asset assist assume asthma athlete atom attack attend attitude attract auction audit august aunt author auto autumn average avocado avoid awake aware away awesome awful awkward axis baby bachelor bacon badge bag balance balcony ball bamboo banana banner bar barely bargain barrel base basic basket battle beach bean beauty because become beef before begin behave behind believe below belt bench benefit best betray better between beyond bicycle bid bike bind biology bird birth bitter black blade blame blanket blast bleak bless blind blood blossom blouse blue blur blush board boat body boil bomb bone bonus book boost border boring borrow boss bottom bounce box boy bracket brain brand brass brave bread breeze brick bridge brief bright bring brisk broccoli broken bronze broom brother brown brush bubble buddy budget buffalo build bulb bulk bullet bundle bunker burden burger burst bus business busy butterfly buyer buzz cabbage cabin cable cactus cage cake call calm camera camp can canal cancel candy cannon canoe canvas canyon capable capital captain car carbon card cargo carpet carry cart case cash casino castle casual cat catalog catch category cattle caught cause caution cave ceiling celery cement census century cereal certain chair chalk champion change chaos chapter charge chase chat cheap check cheese chef cherry chest chicken chief child chimney choice choose chronic chuckle chunk churn cigar cinnamon circle citizen city civil claim clap clarify claw clay clean clerk clever click client cliff climb clinic clip clock clog close cloth cloud clown club clump cluster clutch coach coast coconut code coffee coil coin collect color column combine come comfort comic common company concert conduct confirm congress connect consider control convince cook cool copper copy coral core corn correct cost cotton couch country couple course cousin cover coyote crack cradle craft cram crane crash crater crawl crazy cream credit creek crew cricket crime crisp critic crop cross crouch crowd crucial cruel cruise crumble crunch crush cry crystal cube culture cup cupboard curious current curtain curve cushion custom cute cycle dad damage damp dance danger daring dash daughter dawn day deal debate debris decade december decide decline decorate decrease deer defense define defy degree delay deliver demand demise denial dentist deny depart depend deposit depth deputy derive describe desert design desk despair destroy detail detect develop device devote diagram dial diamond diary dice diesel diet differ digital dignity dilemma dinner dinosaur direct dirt disagree discover disease dish dismiss disorder display distance divert divide divorce dizzy doctor document dog doll dolphin domain donate donkey donor door dose double dove draft dragon drama drastic draw dream dress drift drill drink drip drive drop drum dry duck dumb dune during dust dutch duty dwarf dynamic eager eagle early earn earth easily east easy echo ecology economy edge edit educate effort egg eight either elbow elder electric elegant element elephant elite else embark embody embrace emerge emotion employ empower empty enable enact end endless endorse enemy energy enforce engage engine enhance enjoy enlist enough enrich enroll ensure enter entire entry envelope episode equal equip era erase erode erosion error erupt escape essay essence estate eternal ethics evidence evil evoke evolve exact example excess exchange excite exclude excuse execute exercise exhaust exhibit exile exist exit exotic expand expect expire explain expose express extend extra eye eyebrow fabric face faculty fade faint faith fall false fame family famous fan fancy fantasy farm fashion fat fatal father fatigue fault favorite feature february federal fee feed feel female fence festival fetch fever few fiber fiction field figure file film filter final find fine finger finish fire fish five fix flag flame flash flat flavor flee flight flip float flock floor flower fluid flush fly foam focus fog foil fold follow food foot force forest forget fork fortune forum forward fossil foster found fox fragile frame frequent fresh friend fringe frog front frost frown frozen fruit fuel fun funny furnace fury future gadget gain galaxy gallery game gap garage garbage garden garlic garment gas gasp gate gather gauge gaze general genius genre gentle genuine gesture ghost giant gift giggle ginger giraffe girl give glad glance glare glass glide glimpse globe gloom glory glove glow glue goat goddess gold good gorgeous gossip govern gown grab grace grain grant grape grass gravity great green grid grief grit grocery group grow grunt guard guess guide guilt guitar gun gym habit hair half hammer hamster hand happy harbor hard harsh harvest hat have hawk hazard head health heart heavy hedgehog height hello helmet help hen hero hidden high hill hint hip hire history hobby hockey hold hole holiday hollow home honey hood hope horn horror horse hospital host hotel hour hover hub huge human humble humor hundred hungry hunt hurdle hurry hurt husband hybrid ice icon idea identify idle ignore ill illegal illness image imitate immense immune impact impose improve impulse inch include income increase index indicate indoor industry infant inflict inform inhale inherit initial inject injury inner innocent input inquiry insane inspire install intact interest into invest invite involve iron island isolate issue item ivory jacket jaguar jar jazz jealous jeans jelly jewel job join joke journey joy judge juice jump jungle junior junk just kangaroo keen keep ketchup key kick kid kidney kind kingdom kiss kit kitchen kite kitten kiwi knee knife knock know lab label labor ladder lady lake lamp language laptop large later latin laugh laundry lava law lawn lawsuit layer lazy leader leaf learn leave lecture left leg legal legend leisure lemon lend length lens leopard lesson letter level liar liberty library license life lift light like limb limit link lion liquid list little live lizard load loan lobster local lock logic lonely long loop lottery loud lounge love loyal lucky luggage lumber lunar lunch luxury lyrics machine mad magic magnet maid mail main major make mammal man manage mandate mango mansion manual maple marble march margin marine market marriage mask mass master match material math matrix matter maximum maze meadow mean measure meat mechanic medal media melody melt member memory mention menu mercy merge merit merry mesh message metal method middle midnight milk million mimic mind minimum minor minute miracle mirror misery miss mistake mix mixed mixture mobile model modify mom moment monitor monkey monster month moon moral more morning mosquito mother motion motor mountain mouse move movie much muffin mule multiply muscle museum mushroom music must mutual myself mystery myth naive name napkin narrow nasty nation nature near neck need negative neglect neither nephew nerve nest net network neutral never news next nice night noble noise nominee noodle normal north nose notable note nothing novel now nuclear number nurse nut oak obey object oblige obscure observe obtain obvious occur ocean october odor off offer office often oil okay old olive olympic omit once one onion online only open opera opinion oppose option orange orbit orchard order ordinary organ orient original orphan ostrich other outdoor outer output outside oval oven over own owner oxygen oyster ozone pact paddle page pair palace palm panda panel panic panther paper parade parent park parrot party pass patch path patient patrol pattern pause pave payment peace peanut pear peasant pelican pen penalty pencil people pepper perfect permit person pet phone photo phrase physical piano picnic picture piece pig pigeon pill pilot pink pioneer pipe pistol pitch pizza place planet plastic plate play please pledge pluck plug plunge poem poet point polar police pond pony pool popular portion position possible post potato pottery poverty powder power practice praise predict prefer prepare present pretty prevent price pride primary print priority prison private prize problem process produce profit program project promote proof property prosper protect proud provide public pudding pull pulp pulse pumpkin punch pupil puppy purchase purity purpose purse push put puzzle pyramid quality quantum quarter question quick quit quiz quote rabbit raccoon race rack radar radio rail rain raise rally ramp ranch random range rapid rare rate rather raven raw razor ready real reason rebel rebuild recall receive recipe record recycle reduce reflect reform refuse region regret regular reject relax release relief rely remain remember remind remove render renew rent reopen repair repeat replace report require rescue resemble resist resource response result retire retreat return reunion reveal review reward rhythm rib ribbon rice rich ride ridge rifle right rigid ring riot ripple risk ritual rival river road roast robot robust rocket romance roof rookie room rose rotate rough round route royal rubber rude rug rule run runway rural sad saddle sadness safe sail salad salmon salon salt salute same sample sand satisfy satoshi sauce sausage save say scale scan scare scatter scene scheme school science scissors scorpion scout scrap screen script scrub sea search season seat second secret section security seed seek segment select sell seminar senior sense sentence series service session settle setup seven shadow shaft shallow share shed shell sheriff shield shift shine ship shiver shock shoe shoot shop short shoulder shove shrimp shrug shuffle shy sibling sick side siege sight sign silent silk silly silver similar simple since sing siren sister situate six size skate sketch ski skill skin skirt skull slab slam sleep slender slice slide slight slim slogan slot slow slush small smart smile smoke smooth snack snake snap sniff snow soap soccer social sock soda soft solar soldier solid solution solve someone song soon sorry sort soul sound soup source south space spare spatial spawn speak special speed spell spend sphere spice spider spike spin spirit split spoil sponsor spoon sport spot spray spread spring square squeeze squirrel stable stadium staff stage stairs stamp stand start state stay steak steel stem step stereo stick still sting stock stomach stone stool story stove strategy street strike strong struggle student stuff stumble style subject submit subway success such sudden suffer sugar suggest suit summer sun sunny sunset super supply supreme sure surface surge surprise surround survey suspect sustain swallow swamp swap swarm swear sweet swift swim swing switch sword symbol symptom syrup system table tackle tag tail talent talk tank tape target task taste tattoo taxi teach team tell ten tenant tennis tent term test text thank that theme then theory there they thing this thought three thrive throw thumb thunder ticket tide tiger tilt timber time tiny tip tired tissue title toast tobacco today toddler toe together toilet token tomato tomorrow tone tongue tonight tool tooth top topic topple torch tornado tortoise toss total tourist toward tower town toy track trade traffic tragic train transfer trap trash travel tray treat tree trend trial tribe trick trigger trim trip trophy trouble truck true truly trumpet trust truth try tube tuition tumble tuna tunnel turkey turn turtle twelve twenty twice twin twist two type typical ugly umbrella unable unaware uncle uncover under undo unfair unfold unhappy uniform unique unit universe unknown unlock until unusual unveil update upgrade uphold upon upper upset urban urge usage use used useful useless usual utility vacant vacuum vague valid valley valve van vanish vapor various vast vault vehicle velvet vendor venture venue verb verify version very vessel veteran viable vibrant vicious victory video view village vintage violin virtual virus visa visit visual vital vivid vocal voice void volcano volume vote voyage wage wagon wait walk wall walnut want warfare warm warrior wash wasp waste water wave way wealth weapon wear weather web wedding weekend weird welcome west wet whale what wheat wheel when where whip whisper wide width wife wild will win window wine wing wink winner winter wire wisdom wise wish witness wolf woman wonder wood wool word work world worry worth wrap wreck wrestle wrist write wrong yard year yellow you young youth zebra zero zone zoo".split(' ');
-  WORDLIST = base.slice(0,2048);
-  while(WORDLIST.length<2048) WORDLIST.push('word'+WORDLIST.length);
-  return WORDLIST;
-}
-async function entropyToMnemonic(e){
-  const wl=await getWordlist();
-  const h=await sha256(e);
-  let bits='';for(let b of e)bits+=b.toString(2).padStart(8,'0');bits+=h[0].toString(2).padStart(8,'0').slice(0,4);
-  let w=[];for(let i=0;i<bits.length;i+=11){w.push(wl[parseInt(bits.slice(i,i+11),2)]);}return w.join(' ');
-}
-async function seedToPrivKey(m){const enc=new TextEncoder();const km=await crypto.subtle.importKey('raw',enc.encode(m),'PBKDF2',false,['deriveBits']);const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:enc.encode('mnemonic'),iterations:2048,hash:'SHA-512'},km,512);const seed=new Uint8Array(bits);let priv=seed.slice(0,32);if(bytesToBigInt(priv)%N===0n)priv[31]=1;return priv;}
-async function deriveKey(pin,salt){const enc=new TextEncoder();const km=await crypto.subtle.importKey('raw',enc.encode(pin),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name
+function ripemd160(input){function f(j,x,y,z){if(j<16)return x^y^z;if(j<32)return (x&y)|(~x&z);if(j<48)return (x|~y)^z;if(j<64)return (x&z)|(y&~z);return x^(y|~z);}function K(j){if(j<16)return 0;if(j<32)return 0x5A827999;if(j<48)return 0x6ED9EBA1;if(j<64)return 0x8F1BBCDC;return 0xA953FD4E;}function Kp(j){if(j<16)return 0x50A28BE6;if(j<32)return 0x5C4DD124;if(j<48)return 0x6D703EF3;if(j<64)return 0x7A6D76E9;return 0;}function rol(x,n){return ((x<<n)|(x>>>(32-n)))>>>0;}const r1=[0,1,2,3,4,5,6,7,8,9,10,11,12,13,14,15,7,4,13,1,10,6,15,3,12,0,9,5,2,14,11,8,3,10,14,4,9,15,8,1,2,7,0,6,13,11,5,12,1,9,11,10,0,8,12,4,13,3,7,15,14,5,6,2,4,0,5,9,7,12,2,10,14,1,3,8,11,6,15,13];const r2=[5,14,7,0,9,2,11,4,13,6,15,8,1,10,3,12,6,11,3,7,0,13,5,10,14,15,8,12,4,9,1,2,15,5,1,3,7,14,6,9,11,8,12,2,10,0,4,13,8,6,4,1,3,11,15,0,5,12,2,13,9,7,10,14,12,15,10,4,1,5,8,7,6,2,13,11,5,14,15,0,3,9];const s1=[11,14,15,12,5,8,7,9,11,13,14,15,6,7,9,8
