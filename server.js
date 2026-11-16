@@ -1,6 +1,5 @@
 const express = require('express');
 const path = require('path');
-const cors = require('cors');
 const fetch = require('node-fetch');
 
 const app = express();
@@ -11,7 +10,6 @@ const BLOCKSTREAM = 'https://blockstream.info/api';
 // Admin secret - CHANGE THIS in Render -> Environment -> ADMIN_KEY
 const ADMIN_KEY = process.env.ADMIN_KEY || 'easypay-admin-123';
 
-app.use(cors());
 app.use(express.json());
 app.use(express.static(path.join(__dirname, 'public')));
 
@@ -259,7 +257,7 @@ app.post('/api/p2p/create', (req, res) => {
   res.json({ success: true, offer });
 });
 
-// DELETE an offer (optional - for admin / owner)
+// DELETE an offer
 app.delete('/api/p2p/:id', (req, res) => {
   const id = parseInt(req.params.id);
   p2pOffers = p2pOffers.filter(o => o.id !== id);
@@ -287,7 +285,6 @@ app.get('/api/market', async (req, res) => {
 
 // ===== 11. FOREX RATES (for Market tab) =====
 app.get('/api/forex', async (req, res) => {
-  // Simple static + CoinGecko NGN fallback - replace with real Forex API (exchangerate.host) if you get a key
   try {
     const r = await fetch('https://api.coingecko.com/api/v3/simple/price?ids=tether&vs_currencies=ngn');
     const d = await r.json();
@@ -319,9 +316,9 @@ app.get('*', (req, res) => {
 });
 
 app.listen(PORT, () => {
-  console.log(`✅ EasyPay Backend + Frontend live on port ${PORT}`);
-  console.log(`   Health: http://localhost:${PORT}/health`);
-  console.log(`   Balance: http://localhost:${PORT}/api/balance/1A...`);
-  console.log(`   P2P: http://localhost:${PORT}/api/p2p/offers`);
-  console.log(`   Market: http://localhost:${PORT}/api/market`);
+  console.log(`EasyPay Backend + Frontend live on port ${PORT}`);
+  console.log(`Health: http://localhost:${PORT}/health`);
+  console.log(`Balance: http://localhost:${PORT}/api/balance/1A...`);
+  console.log(`P2P: http://localhost:${PORT}/api/p2p/offers`);
+  console.log(`Market: http://localhost:${PORT}/api/market`);
 });
