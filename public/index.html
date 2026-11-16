@@ -2,59 +2,65 @@
 <html>
 <head>
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
-<title>EasyPay Wallet - Trade, P2P, Forex</title>
+<title>EasyPay - Send, Receive, Buy, P2P</title>
 <style>
   *{box-sizing:border-box}
-  body{background:#000;color:#fff;font-family:Arial;margin:0;padding:0}
-  .container{padding:20px;max-width:520px;margin:0 auto;padding-bottom:95px}
-  .logo{color:#ff0000;font-size:26px;font-weight:900;text-align:center;margin-top:8px}
-  .subtitle{color:#888;text-align:center;font-size:12px}
-  .badge{background:#ff0000;color:#fff;font-size:11px;padding:4px 10px;border-radius:20px;display:inline-block}
-  .card{background:#111;border:1px solid #222;border-radius:20px;padding:18px;margin-top:14px}
-  .balance{font-size:34px;font-weight:900;margin:8px 0}
-  .small{color:#888;font-size:12px}
-  .warn{background:#2a1a00;border:1px solid #ff8800;color:#ffaa00;padding:12px;border-radius:12px;font-size:12px;margin-top:10px}
-  .success{background:#002a00;border:1px solid #00aa55;color:#00ff88;padding:12px;border-radius:12px;font-size:12px;margin-top:10px}
-  button{background:#ff0000;color:#fff;border:none;padding:15px;width:100%;border-radius:14px;font-size:15px;font-weight:bold;margin-top:10px;cursor:pointer}
-  button.secondary{background:#222;border:1px solid #333}
-  button.green{background:#00aa55}
+  body{background:#05070D;color:#0B0E14;font-family:Arial, sans-serif;margin:0;padding:0}
+  .container{padding:16px;max-width:520px;margin:0 auto;padding-bottom:100px}
+  .logo{color:#fff;font-size:30px;font-weight:900;text-align:center;margin-top:10px;letter-spacing:1px}
+  .logo span{color:#2E7DFF}
+  .subtitle{text-align:center;margin-top:4px}
+  .badge{background:#2E7DFF;color:#fff;font-size:11px;padding:6px 12px;border-radius:20px;display:inline-block;font-weight:bold;letter-spacing:.5px}
+  /* LIGHT ASH CARDS */
+  .card{background:#EDEFF2;border:1px solid #D6DAE0;border-radius:22px;padding:18px;margin-top:14px;box-shadow:0 6px 18px rgba(0,0,0,.35)}
+  .card-dark{background:#0F1420;color:#fff;border:1px solid #2E7DFF}
+  .balance{font-size:34px;font-weight:900;margin:8px 0;color:#0B0E14}
+  .balance span{color:#2E7DFF}
+  .small{color:#5A6472;font-size:12px}
+  .small-light{color:#AAB4C5;font-size:12px}
+  .warn{background:#FFF3D6;border:1px solid #FFB800;color:#7A5A00;padding:12px;border-radius:12px;font-size:12px;margin-top:10px}
+  .success{background:#D6F5E3;border:1px solid #00AA55;color:#006633;padding:12px;border-radius:12px;font-size:12px;margin-top:10px}
+  button{background:#2E7DFF;color:#fff;border:none;padding:15px;width:100%;border-radius:14px;font-size:15px;font-weight:bold;margin-top:10px;cursor:pointer;box-shadow:0 4px 12px rgba(46,125,255,.35)}
+  button.secondary{background:#fff;color:#0B0E14;border:1.5px solid #CBD0D8;box-shadow:none}
+  button.green{background:#00AA55;box-shadow:0 4px 12px rgba(0,170,85,.3)}
+  button.dark{background:#0B0E14;color:#fff}
   button.half{width:48%}
-  input,select{width:100%;padding:14px;background:#222;color:#fff;border:1px solid #333;border-radius:12px;font-size:14px;margin-top:10px}
-  textarea{width:100%;padding:14px;background:#222;color:#fff;border:1px solid #333;border-radius:12px;font-size:14px;margin-top:10px;min-height:70px}
-  .address{background:#222;padding:12px;border-radius:10px;word-break:break-all;font-size:13px;margin:8px 0}
-  .seed{background:#001a00;border:1px solid #00ff88;color:#00ff88;padding:14px;border-radius:12px;word-break:break-word;line-height:1.8;font-size:15px;font-weight:bold;text-align:center}
-  .mnemonic{background:#1a1a00;border:1px solid #ffcc00;color:#ffcc00;padding:12px;border-radius:12px;word-break:break-all;font-size:11px}
+  input,select{width:100%;padding:14px;background:#fff;color:#0B0E14;border:1.5px solid #CBD0D8;border-radius:12px;font-size:14px;margin-top:10px;outline:none}
+  input:focus,select:focus,textarea:focus{border-color:#2E7DFF;box-shadow:0 0 0 3px rgba(46,125,255,.15)}
+  textarea{width:100%;padding:14px;background:#fff;color:#0B0E14;border:1.5px solid #CBD0D8;border-radius:12px;font-size:14px;margin-top:10px;min-height:70px;outline:none}
+  .address{background:#fff;padding:12px;border-radius:10px;word-break:break-all;font-size:13px;margin:8px 0;border:1px solid #CBD0D8;color:#0B0E14}
+  .seed{background:#0B0E14;border:2px solid #2E7DFF;color:#fff;padding:14px;border-radius:12px;word-break:break-word;line-height:1.8;font-size:15px;font-weight:bold;text-align:center}
+  .mnemonic{background:#FFF8D6;border:1.5px solid #FFB800;color:#5A4A00;padding:12px;border-radius:12px;word-break:break-all;font-size:11px}
   .hidden{display:none}
-  .coin{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #222;gap:10px}
-  .coin-addr{font-size:11px;color:#888;word-break:break-all}
-  .tx{padding:12px 0;border-bottom:1px solid #222;font-size:13px}
-  .tabs{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid #222;display:flex;justify-content:space-around;padding:8px 0;max-width:520px;margin:0 auto;z-index:99}
-  .tab{color:#888;font-size:11px;text-align:center;cursor:pointer;padding:6px 6px;border-radius:10px;flex:1}
-  .tab.active{color:#fff;background:#222}
+  .coin{display:flex;justify-content:space-between;align-items:center;padding:12px 0;border-bottom:1px solid #D6DAE0;gap:10px}
+  .coin:last-child{border-bottom:none}
+  .coin-addr{font-size:11px;color:#5A6472;word-break:break-all}
+  .coin-icon{width:38px;height:38px;border-radius:50%;background:#fff;border:1.5px solid #D6DAE0;display:flex;align-items:center;justify-content:center;font-size:18px;flex-shrink:0}
+  .tx{padding:12px 0;border-bottom:1px solid #D6DAE0;font-size:13px}
+  .tabs{position:fixed;bottom:0;left:0;right:0;background:#0B0E14;border-top:2px solid #2E7DFF;display:flex;justify-content:space-around;padding:8px 0 10px;max-width:520px;margin:0 auto;z-index:99}
+  .tab{color:#8A94A6;font-size:11px;text-align:center;cursor:pointer;padding:6px 6px;border-radius:12px;flex:1}
+  .tab.active{color:#fff;background:#2E7DFF}
   .tab span{display:block;font-size:20px}
-  .qrbox{background:#fff;color:#000;padding:14px;border-radius:14px;text-align:center;font-size:11px;word-break:break-all;margin-top:10px}
+  .qrbox{background:#0B0E14;color:#fff;padding:14px;border-radius:14px;text-align:center;font-size:11px;word-break:break-all;margin-top:10px;border:1px solid #2E7DFF}
   .toggle{display:flex;gap:8px;margin-top:10px}
-  .toggle button{flex:1;padding:12px;font-size:13px}
-  .toggle button.active{border:2px solid #fff}
-  .market-row{display:flex;justify-content:space-between;padding:12px 0;border-bottom:1px solid #222;align-items:center}
-  .price{font-weight:bold;text-align:right}
-  .p2p-card{background:#1a1a1a;border:1px solid #333;border-radius:14px;padding:14px;margin-top:10px}
-  .pill{font-size:11px;padding:3px 8px;border-radius:20px;display:inline-block}
-  .pill-buy{background:#00aa55} .pill-sell{background:#ff0000}
-  .chart-box{height:360px;background:#111;border-radius:14px;overflow:hidden;margin-top:10px}
-  .forex-grid{display:grid;grid-template-columns:1fr 1fr;gap:10px;margin-top:10px}
-  .forex-card{background:#1a1a1a;border:1px solid #333;border-radius:14px;padding:12px;text-align:center;cursor:pointer}
-  .forex-card.active{border-color:#ff0000;background:#2a1111}
+  .toggle button{flex:1;padding:12px;font-size:13px;box-shadow:none}
+  .toggle button.active{border:2px solid #0B0E14;background:#0B0E14}
+  .p2p-card{background:#fff;border:1.5px solid #D6DAE0;border-radius:16px;padding:14px;margin-top:10px}
+  .pill{font-size:11px;padding:4px 10px;border-radius:20px;display:inline-block;font-weight:bold;color:#fff}
+  .pill-buy{background:#00AA55} .pill-sell{background:#FF3B30}
+  .buy-btn-binance{background:#F0B90B;color:#000} .buy-btn-bybit{background:#F7A600;color:#000} .buy-btn-moonpay{background:#0052FF} .buy-btn-luno{background:#0B0E14}
+  .top-pill{display:inline-block;background:#E8F0FF;color:#2E7DFF;padding:5px 10px;border-radius:20px;font-size:11px;font-weight:bold}
+  h2,h3{color:#0B0E14}
 </style>
 </head>
 <body>
 <div class="container">
-<div class="logo">EASYPAY</div>
-<div class="subtitle"><span class="badge">WALLET • SEND • RECEIVE • TRADE • P2P • FOREX</span></div>
+<div class="logo">EASY<span>PAY</span></div>
+<div class="subtitle"><span class="badge">WALLET • SEND • RECEIVE • BUY • P2P</span></div>
 
-<!-- LOCK / START - ORIGINAL -->
+<!-- LOCK / START -->
 <div id="lockScreen" class="hidden">
-  <div class="card"><h2 style="margin:0;">Welcome Back 🔒</h2><p class="small">Enter PIN</p><input id="unlockPin" type="password" placeholder="••••" maxlength="6" inputmode="numeric" /><button onclick="unlockWallet()">Unlock Wallet</button><button class="secondary" onclick="forgetWallet()">Forgot PIN / Different Wallet</button><p id="unlockErr" class="small" style="color:#ff4444;"></p></div>
+  <div class="card"><h2 style="margin:0;">Welcome Back 🔒</h2><p class="small">Enter PIN to unlock</p><input id="unlockPin" type="password" placeholder="••••" maxlength="6" inputmode="numeric" /><button onclick="unlockWallet()">Unlock Wallet</button><button class="secondary" onclick="forgetWallet()">Forgot PIN / Different Wallet</button><p id="unlockErr" class="small" style="color:#FF3B30;"></p></div>
 </div>
 <div id="startScreen">
   <div class="card">
@@ -67,38 +73,42 @@
     <div class="warn">⚠️ Seed + PIN = your money. Lose seed = lose money.</div>
     <p id="createStatus" class="small"></p>
   </div>
-  <div class="card"><h3 style="margin:0;">📈 Market Preview (No Login Needed)</h3><div id="publicMarket"><p class="small">Loading prices...</p></div><button class="secondary" onclick="loadMarket()">Refresh Prices</button></div>
+  <div class="card" style="text-align:center;">
+    <span class="top-pill">✦ NEW LOOK ✦</span>
+    <h3 style="margin:10px 0 4px 0;">Black • Light Ash • Blue</h3>
+    <p class="small">Send, Receive, Buy & P2P — all in one clean wallet.</p>
+  </div>
 </div>
 
 <div id="walletScreen" class="hidden">
-  <!-- HOME - ORIGINAL -->
+  <!-- HOME -->
   <div id="tab-home">
-    <div class="card">
-      <p class="small" style="margin:0;">TOTAL BALANCE</p>
-      <div class="balance" id="balanceDisplay">0.00000000 BTC</div>
-      <p class="small">≈ $<span id="usdDisplay">0.00</span> • On-chain: <span id="onchainDisplay">0</span> sats</p>
-      <p id="addressDisplay" class="address"></p>
-      <div style="display:flex;gap:8px;"><button class="half" onclick="switchTab('send')">↑ Send</button><button class="half secondary" onclick="switchTab('receive')">↓ Receive</button></div>
-      <div style="display:flex;gap:8px;"><button class="half green" onclick="switchTab('buy')">💳 Buy BTC</button><button class="half secondary" onclick="switchTab('p2p')">🤝 P2P</button></div>
-      <button class="secondary" onclick="checkBalance();loadHistory();loadMarket()">Refresh</button>
-      <button class="secondary" onclick="lockWallet()">🔒 Lock</button>
+    <div class="card card-dark">
+      <p class="small-light" style="margin:0;">TOTAL BALANCE</p>
+      <div class="balance" style="color:#fff;">0.00000000 <span>BTC</span></div>
+      <div class="balance" id="balanceDisplay" style="display:none;">0.00000000 BTC</div>
+      <p class="small-light">≈ $<span id="usdDisplay">0.00</span> • On-chain: <span id="onchainDisplay">0</span> sats</p>
+      <p id="addressDisplay" class="address" style="background:#1A2233;color:#fff;border-color:#2E7DFF;"></p>
+      <div style="display:flex;gap:8px;"><button class="half" onclick="switchTab('send')">↑ Send</button><button class="half secondary" style="background:#fff;" onclick="switchTab('receive')">↓ Receive</button></div>
+      <div style="display:flex;gap:8px;"><button class="half green" onclick="switchTab('buy')">💳 Buy BTC</button><button class="half secondary" style="background:#fff;" onclick="switchTab('p2p')">🤝 P2P</button></div>
+      <button class="secondary" style="background:#fff;" onclick="checkBalance();loadHistory()">Refresh</button>
+      <button class="secondary" style="background:transparent;color:#fff;border-color:#333;" onclick="lockWallet()">🔒 Lock</button>
     </div>
     <div class="card"><h3 style="margin:0 0 8px 0;">Your Coins</h3>
-      <div class="coin"><div><b>₿ Bitcoin</b><div class="small">BTC</div><div class="coin-addr" id="btcAddr">-</div></div><div style="text-align:right"><b id="coinBtc">0.00000000</b><div class="small" id="btcPrice">-</div></div></div>
-      <div class="coin"><div><b>Ξ Ethereum</b><div class="small">ETH</div><div class="coin-addr" id="ethAddr">-</div></div><div style="text-align:right"><b>0.00</b><div class="small" id="ethPrice">-</div></div></div>
-      <div class="coin"><div><b>₮ USDT</b><div class="small">USDT • ERC20</div><div class="coin-addr" id="usdtAddr">-</div></div><div style="text-align:right"><b>0.00</b><div class="small" id="usdtPrice">-</div></div></div>
-      <div class="coin"><div><b>◉ Solana</b><div class="small">SOL</div></div><div style="text-align:right"><b>0.00</b><div class="small" id="solPrice">-</div></div></div>
+      <div class="coin"><div style="display:flex;gap:10px;align-items:center;"><div class="coin-icon">₿</div><div><b>Bitcoin</b><div class="small">BTC</div><div class="coin-addr" id="btcAddr">-</div></div></div><div style="text-align:right"><b id="coinBtc">0.00000000</b></div></div>
+      <div class="coin"><div style="display:flex;gap:10px;align-items:center;"><div class="coin-icon">Ξ</div><div><b>Ethereum</b><div class="small">ETH</div><div class="coin-addr" id="ethAddr">-</div></div></div><div style="text-align:right"><b>0.00</b></div></div>
+      <div class="coin"><div style="display:flex;gap:10px;align-items:center;"><div class="coin-icon">₮</div><div><b>USDT</b><div class="small">USDT • ERC20</div><div class="coin-addr" id="usdtAddr">-</div></div></div><div style="text-align:right"><b>0.00</b></div></div>
     </div>
     <div class="card"><h3 style="margin:0;">🔑 12-Word Seed</h3><div class="seed" id="seedDisplay"></div><button class="secondary" onclick="copySeed()">Copy Seed</button></div>
     <div class="card"><h3 style="margin:0;">Private Key</h3><div class="mnemonic" id="mnemonicDisplay"></div><button class="secondary" onclick="copyPriv()">Copy Private Key</button></div>
   </div>
 
-  <!-- SEND - REAL BTC ONLY, NO TEST MONEY -->
+  <!-- SEND -->
   <div id="tab-send" class="hidden">
     <div class="card">
       <h2 style="margin:0;">Send Bitcoin</h2>
       <p class="small">Balance: <span id="sendBal">0</span> BTC</p>
-      <p class="small">Real BTC: On blockchain, costs fee. Send only to a real BTC address.</p>
+      <p class="small">Real BTC: On blockchain, costs fee.</p>
       <input id="sendTo" placeholder="To address (1... / bc1...)" />
       <input id="sendAmt" placeholder="Amount BTC e.g. 0.001" type="number" step="0.00000001" />
       <p class="small">Fee (BTC):</p>
@@ -110,20 +120,20 @@
     </div>
   </div>
 
-  <!-- RECEIVE - ORIGINAL -->
+  <!-- RECEIVE -->
   <div id="tab-receive" class="hidden">
-    <div class="card"><h2 style="margin:0;">Receive Bitcoin</h2><div class="qrbox" id="qrText">Your address</div><p class="address" id="receiveAddr"></p><button onclick="copyAddress()">Copy BTC Address</button><p class="small">Share this address with anyone to receive BTC. Send it to them via WhatsApp / copy.</p></div>
-    <div class="card"><h2 style="margin:0;">Receive ETH / USDT</h2><p class="address" id="receiveEth"></p><button class="secondary" onclick="copyEth()">Copy ETH Address</button><p class="small" style="color:#ffaa00;">⚠️ Don't send BTC to ETH address. Don't send ETH to BTC address.</p></div>
+    <div class="card"><h2 style="margin:0;">Receive Bitcoin</h2><div class="qrbox" id="qrText">Your address</div><p class="address" id="receiveAddr"></p><button onclick="copyAddress()">Copy BTC Address</button><p class="small">Share this address with anyone to receive BTC.</p></div>
+    <div class="card"><h2 style="margin:0;">Receive ETH / USDT</h2><p class="address" id="receiveEth"></p><button class="secondary" onclick="copyEth()">Copy ETH Address</button><p class="small" style="color:#FF8A00;">⚠️ Don't send BTC to ETH address.</p></div>
   </div>
 
   <!-- BUY -->
   <div id="tab-buy" class="hidden">
-    <div class="card"><h2 style="margin:0;">💳 Buy Bitcoin</h2><p class="small">Buy from trusted exchanges, withdraw to your EasyPay address: <b id="buyAddr" style="color:#fff;word-break:break-all;"></b></p>
+    <div class="card"><h2 style="margin:0;">💳 Buy Bitcoin</h2><p class="small">Buy from trusted exchanges, withdraw to your EasyPay address:</p><p class="address" id="buyAddr"></p>
       <button onclick="copyAddress()">Copy My Address</button>
       <button class="green" onclick="window.open('https://www.binance.com/en/buy-sell-crypto?fiat=NGN&crypto=BTC','_blank')">Buy on Binance →</button>
-      <button style="background:#f0b90b;color:#000;" onclick="window.open('https://www.bybit.com/fiat/trade/express?fiat=NGN&crypto=BTC','_blank')">Buy on Bybit →</button>
-      <button style="background:#0052ff;" onclick="window.open('https://www.moonpay.com/buy/btc','_blank')">Buy with Card (MoonPay) →</button>
-      <button class="secondary" onclick="window.open('https://www.luno.com','_blank')">Buy on Luno (Nigeria) →</button>
+      <button class="buy-btn-binance" onclick="window.open('https://www.bybit.com/fiat/trade/express?fiat=NGN&crypto=BTC','_blank')">Buy on Bybit →</button>
+      <button class="buy-btn-moonpay" onclick="window.open('https://www.moonpay.com/buy/btc','_blank')">Buy with Card (MoonPay) →</button>
+      <button class="buy-btn-luno" onclick="window.open('https://www.luno.com','_blank')">Buy on Luno (Nigeria) →</button>
       <div class="warn">How it works: Buy BTC on Binance → Withdraw → Paste your EasyPay address → Wait 10 mins → Balance appears.</div>
     </div>
     <div class="card"><h3 style="margin:0;">🧮 Buy Calculator</h3><p class="small">1 BTC = <span id="calcPrice">₦145,000,000</span></p><input id="calcNGN" placeholder="Enter Naira e.g. 50000" type="number" oninput="calcBuy()" /><p class="small" id="calcResult">You will get: -</p></div>
@@ -137,28 +147,10 @@
       <button onclick="loadP2P()">Refresh Offers</button>
     </div>
     <div id="p2pList"></div>
-    <div class="card"><h3 style="margin:0;">+ Create Your Own Offer</h3><input id="sellerName" placeholder="Your name e.g. LagosTrader" /><select id="newOfferType"><option value="sell">I want to Sell</option><option value="buy">I want to Buy</option></select><select id="newOfferCoin"><option value="BTC">BTC</option><option value="USDT">USDT</option></select><input id="newOfferPrice" placeholder="Price in NGN per coin e.g. 145000000" type="number" /><input id="newOfferMin" placeholder="Min NGN e.g. 5000" type="number" /><input id="newOfferMax" placeholder="Max NGN e.g. 500000" type="number" /><select id="newOfferPay"><option>Bank Transfer</option><option>OPay</option><option>Palmpay</option><option>Cash</option></select><input id="newOfferContact" placeholder="WhatsApp / Telegram" /><button class="green" onclick="createOffer()">Publish Offer</button><p id="p2pCreateStatus" class="small"></p></div>
+    <div class="card"><h3 style="margin:0;">+ Create Your Own Offer</h3><input id="sellerName" placeholder="Your name e.g. LagosTrader" /><select id="newOfferType"><option value="sell">I want to Sell</option><option value="buy">I want to Buy</option></select><select id="newOfferCoin"><option value="BTC">BTC</option><option value="USDT">USDT</option></select><input id="newOfferPrice" placeholder="Price in NGN per coin e.g. 145000000" type="number" /><input id="newOfferMin" placeholder="Min NGN e.g. 5000" type="number" /><input id="newOfferMax" placeholder="Max NGN e.g. 500000" type="number" /><select id="newOfferPay"><option>Bank Transfer</option><option>OPay</option><option>Palmpay</option><option>Cash</option></select><input id="newOfferContact" placeholder="WhatsApp / Telegram for buyers" /><button class="green" onclick="createOffer()">Publish Offer</button><p id="p2pCreateStatus" class="small"></p></div>
   </div>
 
-  <!-- MARKET / FOREX -->
-  <div id="tab-market" class="hidden">
-    <div class="card"><h2 style="margin:0;">📈 Market & Forex</h2><p class="small">Live prices + TradingView charts. Tap a pair to view chart.</p><button class="secondary" onclick="loadMarket()">Refresh Prices</button><div id="marketList"><p class="small">Loading...</p></div></div>
-    <div class="card"><h3 style="margin:0;">Forex Pairs</h3><div class="forex-grid">
-      <div class="forex-card" onclick="setChart('OANDA:EURUSD','EUR/USD')"><b>EUR/USD</b><div class="small" id="fx-EURUSD-p">1.0850</div></div>
-      <div class="forex-card" onclick="setChart('OANDA:GBPUSD','GBP/USD')"><b>GBP/USD</b><div class="small" id="fx-GBPUSD-p">1.2700</div></div>
-      <div class="forex-card" onclick="setChart('OANDA:USDNGN','USD/NGN')"><b>USD/NGN</b><div class="small" id="fx-USDNGN-p">1,520</div></div>
-      <div class="forex-card" onclick="setChart('OANDA:XAUUSD','Gold')"><b>XAU/USD (Gold)</b><div class="small" id="fx-XAUUSD-p">2,650</div></div>
-      <div class="forex-card" onclick="setChart('BINANCE:BTCUSDT','BTC/USD')"><b>BTC/USD</b><div class="small" id="fx-BTCUSD-p">97,000</div></div>
-      <div class="forex-card" onclick="setChart('BINANCE:ETHUSDT','ETH/USD')"><b>ETH/USD</b><div class="small" id="fx-ETHUSD-p">3,400</div></div>
-    </div>
-    <div style="margin-top:12px;"><b id="chartTitle">Chart: BTC/USD</b></div>
-    <div class="chart-box" id="tradingview-widget"></div>
-    <p class="small">Chart powered by TradingView. View-only — trading happens via P2P / Buy tabs.</p>
-    </div>
-    <div class="card"><h3 style="margin:0;">⭐ Unique Features</h3><p class="small">• <b>NGN Rate:</b> See BTC price in Naira instantly<br>• <b>P2P:</b> Trade directly with people<br>• <b>Forex View:</b> Watch EUR/USD, Gold, BTC together<br>• <b>Alert:</b> Set price alert below</p><input id="alertPrice" placeholder="Alert me when BTC hits $ e.g. 100000" type="number" /><button class="secondary" onclick="setAlert()">Set Price Alert</button><p id="alertStatus" class="small"></p></div>
-  </div>
-
-  <!-- HISTORY - REAL ONLY -->
+  <!-- HISTORY -->
   <div id="tab-history" class="hidden">
     <div class="card"><h2 style="margin:0;">History</h2><div id="historyList"><p class="small">No transactions yet.</p></div><button class="secondary" onclick="loadHistory()">Refresh</button></div>
   </div>
@@ -171,13 +163,10 @@
   <div class="tab" onclick="switchTab('receive')"><span>↓</span>Receive</div>
   <div class="tab" onclick="switchTab('buy')"><span>💳</span>Buy</div>
   <div class="tab" onclick="switchTab('p2p')"><span>🤝</span>P2P</div>
-  <div class="tab" onclick="switchTab('market')"><span>📈</span>Market</div>
   <div class="tab" onclick="switchTab('history')"><span>🕒</span>History</div>
 </div>
 
-<script src="https://s3.tradingview.com/tv.js"></script>
 <script>
-const API_BASE=''; const EXPLORER='https://mempool.space';
 const P=BigInt('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F'); const N=BigInt('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141'); const Gx=BigInt('0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798'); const Gy=BigInt('0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8');
 function mod(a,b){let r=a%b;return r>=0n?r:-r+b;} function modInv(a,b){let [old_r,r]=[a,b];let [old_s,s]=[1n,0n];while(r!==0n){let q=old_r/r;[old_r,r]=[r,old_r-q*r];[old_s,s]=[s,old_s-q*s];}return mod(old_s,b);}
 function pointAdd(p1,p2){if(!p1)return p2;if(!p2)return p1;let m;if(p1[0]===p2[0]&&p1[1]===p2[1]){m=mod((3n*p1[0]*p1[0])*modInv(2n*p1[1],P),P);}else{m=mod((p2[1]-p1[1])*modInv(mod(p2[0]-p1[0],P),P),P);}let x=mod(m*m-p1[0]-p2[0],P);let y=mod(m*(p1[0]-x)-p1[1],P);return [x,y];}
@@ -191,14 +180,12 @@ async function privKeyToAddress(priv){let comp=getPubKeyCompressed(priv);let h1=
 function addressToHash160(a){let d=base58Decode(a);return d.slice(1,21);}
 function keccak256(input){const RC=[0x00000001,0x00008082,0x0000808a,0x80008000,0x0000808b,0x80000001,0x80008081,0x80008009,0x0000008a,0x00000088,0x80008009,0x8000000a,0x8000808b,0x0000008b,0x80008089,0x80008003,0x80008002,0x80000080,0x0000800a,0x8000000a,0x80008081,0x80000080,0x00008000,0x80008008,0x80008008,0x80000080,0x80008088];const ROT=[0,1,62,28,27,36,44,6,55,20,3,10,43,25,39,41,45,15,21,8,18,2,61,56,14];const PI=[10,7,11,17,18,3,5,16,8,21,24,4,15,23,19,13,12,2,20,14,22,9,6,1];let state=new Array(25).fill(0);let stateHi=new Array(25).fill(0);function keccakF(){for(let round=0;round<24;round++){let C=new Array(5).fill(0),Chi=new Array(5).fill(0);for(let x=0;x<5;x++){C[x]=state[x]^state[x+5]^state[x+10]^state[x+15]^state[x+20];}for(let x=0;x<5;x++){let d=C[(x+4)%5]^((C[(x+1)%5]<<1)|(C[(x+1)%5]>>>31));for(let y=0;y<25;y+=5){state[y+x]^=d;}}let last=state[1];let lastHi=stateHi[1];for(let i=0;i<24;i++){let idx=PI[i];let t=state[idx];let tHi=stateHi[idx];let rot=ROT[i];let newVal,newHi;if(rot<32){newVal=(t<<rot)|(tHi>>>(32-rot));newHi=(tHi<<rot)|(t>>>(32-rot));}else{let r=rot-32;newVal=(tHi<<r)|(t>>>(32-r));newHi=(t<<r)|(tHi>>>(32-r));}state[idx]=last;stateHi[idx]=lastHi;last=newVal;lastHi=newHi;}for(let y=0;y<25;y+=5){for(let x=0;x<5;x++){Chi[x]=state[y+x];}for(let x=0;x<5;x++){state[y+x]^=(~Chi[(x+1)%5])&Chi[(x+2)%5];}}state[0]^=RC[round];}}let msg=Array.from(input);msg.push(0x01);while(msg.length%136!==136-1)msg.push(0);msg.push(0x80);for(let off=0;off<msg.length;off+=136){for(let i=0;i<17;i++){let v=0;for(let b=0;b<8;b++)v|=msg[off+i*8+b]<<(b*8);state[i]^=v>>>0;}keccakF();}let out=new Uint8Array(32);for(let i=0;i<4;i++){let v=state[i];for(let b=0;b<8;b++)out[i*8+b]=(v>>(b*8))&0xff;}return out;}
 function ethAddressFromPriv(priv){let k=bytesToBigInt(priv)%N;let pub=scalarMult(k,[Gx,Gy]);let x=bigIntToBytes(pub[0],32);let y=bigIntToBytes(pub[1],32);let pub64=new Uint8Array(64);pub64.set(x,0);pub64.set(y,32);let h=keccak256(pub64);return '0x'+bytesToHex(h.slice(12));}
-
-// ===== SEED - FIXED, WORKS OFFLINE =====
 let WORDLIST=null;
 async function getWordlist(){
   if(WORDLIST) return WORDLIST;
   const urls=['https://cdn.jsdelivr.net/gh/bitcoin/bips@master/bip-0039/english.txt','https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt'];
   for(let url of urls){
-    try{ const r=await fetch(url); if(!r.ok) continue; const t=await r.text(); let list; if(t.trim().startsWith('[')){ list=JSON.parse(t); } else { list=t.trim().split('\n'); } if(list.length>=2048){ WORDLIST=list; return WORDLIST; } }catch(e){ console.log('Wordlist fetch failed:',url); }
+    try{ const r=await fetch(url); if(!r.ok) continue; const t=await r.text(); let list; if(t.trim().startsWith('[')){ list=JSON.parse(t); } else { list=t.trim().split('\n'); } if(list.length>=2048){ WORDLIST=list; return WORDLIST; } }catch(e){}
   }
   const base="abandon ability able about above absent absorb abstract absurd abuse access accident account accuse achieve acid acoustic acquire across act action actor actress actual adapt add address adjust admit adult advance advice aerobic affair afford afraid again age agent agree ahead aim air airport aisle alarm album alcohol alert alien all alley allow almost alone alpha already also alter always amateur amazing among amount amused analyst anchor ancient anger angle angry animal ankle announce annual another answer antenna antique anxiety any apart apology appear apple approve april arch arctic area arena argue arm armed armor army around arrange arrest arrive arrow art artefact artist artwork ask aspect assault asset assist assume asthma athlete atom attack attend attitude attract auction audit august aunt author auto autumn average avocado avoid awake aware away awesome awful awkward axis baby bachelor bacon badge bag balance balcony ball bamboo banana banner bar barely bargain barrel base basic basket battle beach bean beauty because become beef before begin behave behind believe below belt bench benefit best betray better between beyond bicycle bid bike bind biology bird birth bitter black blade blame blanket blast bleak bless blind blood blossom blouse blue blur blush board boat body boil bomb bone bonus book boost border boring borrow boss bottom bounce box boy bracket brain brand brass brave bread breeze brick bridge brief bright bring brisk broccoli broken bronze broom brother brown brush bubble buddy budget buffalo build bulb bulk bullet bundle bunker burden burger burst bus business busy butterfly buyer buzz cabbage cabin cable cactus cage cake call calm camera camp can canal cancel candy cannon canoe canvas canyon capable capital captain car carbon card cargo carpet carry cart case cash casino castle casual cat catalog catch category cattle caught cause caution cave ceiling celery cement census century cereal certain chair chalk champion change chaos chapter charge chase chat cheap check cheese chef cherry chest chicken chief child chimney choice choose chronic chuckle chunk churn cigar cinnamon circle citizen city civil claim clap clarify claw clay clean clerk clever click client cliff climb clinic clip clock clog close cloth cloud clown club clump cluster clutch coach coast coconut code coffee coil coin collect color column combine come comfort comic common company concert conduct confirm congress connect consider control convince cook cool copper copy coral core corn correct cost cotton couch country couple course cousin cover coyote crack cradle craft cram crane crash crater crawl crazy cream credit creek crew cricket crime crisp critic crop cross crouch crowd crucial cruel cruise crumble crunch crush cry crystal cube culture cup cupboard curious current curtain curve cushion custom cute cycle dad damage damp dance danger daring dash daughter dawn day deal debate debris decade december decide decline decorate decrease deer defense define defy degree delay deliver demand demise denial dentist deny depart depend deposit depth deputy derive describe desert design desk despair destroy detail detect develop device devote diagram dial diamond diary dice diesel diet differ digital dignity dilemma dinner dinosaur direct dirt disagree discover disease dish dismiss disorder display distance divert divide divorce dizzy doctor document dog doll dolphin domain donate donkey donor door dose double dove draft dragon drama drastic draw dream dress drift drill drink drip drive drop drum dry duck dumb dune during dust dutch duty dwarf dynamic eager eagle early earn earth easily east easy echo ecology economy edge edit educate effort egg eight either elbow elder electric elegant element elephant elite else embark embody embrace emerge emotion employ empower empty enable enact end endless endorse enemy energy enforce engage engine enhance enjoy enlist enough enrich enroll ensure enter entire entry envelope episode equal equip era erase erode erosion error erupt escape essay essence estate eternal ethics evidence evil evoke evolve exact example excess exchange excite exclude excuse execute exercise exhaust exhibit exile exist exit exotic expand expect expire explain expose express extend extra eye eyebrow fabric face faculty fade faint faith fall false fame family famous fan fancy fantasy farm fashion fat fatal father fatigue fault favorite feature february federal fee feed feel female fence festival fetch fever few fiber fiction field figure file film filter final find fine finger finish fire fish five fix flag flame flash flat flavor flee flight flip float flock floor flower fluid flush fly foam focus fog foil fold follow food foot force forest forget fork fortune forum forward fossil foster found fox fragile frame frequent fresh friend fringe frog front frost frown frozen fruit fuel fun funny furnace fury future gadget gain galaxy gallery game gap garage garbage garden garlic garment gas gasp gate gather gauge gaze general genius genre gentle genuine gesture ghost giant gift giggle ginger giraffe girl give glad glance glare glass glide glimpse globe gloom glory glove glow glue goat goddess gold good gorgeous gossip govern gown grab grace grain grant grape grass gravity great green grid grief grit grocery group grow grunt guard guess guide guilt guitar gun gym habit hair half hammer hamster hand happy harbor hard harsh harvest hat have hawk hazard head health heart heavy hedgehog height hello helmet help hen hero hidden high hill hint hip hire history hobby hockey hold hole holiday hollow home honey hood hope horn horror horse hospital host hotel hour hover hub huge human humble humor hundred hungry hunt hurdle hurry hurt husband hybrid ice icon idea identify idle ignore ill illegal illness image imitate immense immune impact impose improve impulse inch include income increase index indicate indoor industry infant inflict inform inhale inherit initial inject injury inner innocent input inquiry insane inspire install intact interest into invest invite involve iron island isolate issue item ivory jacket jaguar jar jazz jealous jeans jelly jewel job join joke journey joy judge juice jump jungle junior junk just kangaroo keen keep ketchup key kick kid kidney kind kingdom kiss kit kitchen kite kitten kiwi knee knife knock know lab label labor ladder lady lake lamp language laptop large later latin laugh laundry lava law lawn lawsuit layer lazy leader leaf learn leave lecture left leg legal legend leisure lemon lend length lens leopard lesson letter level liar liberty library license life lift light like limb limit link lion liquid list little live lizard load loan lobster local lock logic lonely long loop lottery loud lounge love loyal lucky luggage lumber lunar lunch luxury lyrics machine mad magic magnet maid mail main major make mammal man manage mandate mango mansion manual maple marble march margin marine market marriage mask mass master match material math matrix matter maximum maze meadow mean measure meat mechanic medal media melody melt member memory mention menu mercy merge merit merry mesh message metal method middle midnight milk million mimic mind minimum minor minute miracle mirror misery miss mistake mix mixed mixture mobile model modify mom moment monitor monkey monster month moon moral more morning mosquito mother motion motor mountain mouse move movie much muffin mule multiply muscle museum mushroom music must mutual myself mystery myth naive name napkin narrow nasty nation nature near neck need negative neglect neither nephew nerve nest net network neutral never news next nice night noble noise nominee noodle normal north nose notable note nothing novel now nuclear number nurse nut oak obey object oblige obscure observe obtain obvious occur ocean october odor off offer office often oil okay old olive olympic omit once one onion online only open opera opinion oppose option orange orbit orchard order ordinary organ orient original orphan ostrich other outdoor outer output outside oval oven over own owner oxygen oyster ozone pact paddle page pair palace palm panda panel panic panther paper parade parent park parrot party pass patch path patient patrol pattern pause pave payment peace peanut pear peasant pelican pen penalty pencil people pepper perfect permit person pet phone photo phrase physical piano picnic picture piece pig pigeon pill pilot pink pioneer pipe pistol pitch pizza place planet plastic plate play please pledge pluck plug plunge poem poet point polar police pond pony pool popular portion position possible post potato pottery poverty powder power practice praise predict prefer prepare present pretty prevent price pride primary print priority prison private prize problem process produce profit program project promote proof property prosper protect proud provide public pudding pull pulp pulse pumpkin punch pupil puppy purchase purity purpose purse push put puzzle pyramid quality quantum quarter question quick quit quiz quote rabbit raccoon race rack radar radio rail rain raise rally ramp ranch random range rapid rare rate rather raven raw razor ready real reason rebel rebuild recall receive recipe record recycle reduce reflect reform refuse region regret regular reject relax release relief rely remain remember remind remove render renew rent reopen repair repeat replace report require rescue resemble resist resource response result retire retreat return reunion reveal review reward rhythm rib ribbon rice rich ride ridge rifle right rigid ring riot ripple risk ritual rival river road roast robot robust rocket romance roof rookie room rose rotate rough round route royal rubber rude rug rule run runway rural sad saddle sadness safe sail salad salmon salon salt salute same sample sand satisfy satoshi sauce sausage save say scale scan scare scatter scene scheme school science scissors scorpion scout scrap screen script scrub sea search season seat second secret section security seed seek segment select sell seminar senior sense sentence series service session settle setup seven shadow shaft shallow share shed shell sheriff shield shift shine ship shiver shock shoe shoot shop short shoulder shove shrimp shrug shuffle shy sibling sick side siege sight sign silent silk silly silver similar simple since sing siren sister situate six size skate sketch ski skill skin skirt skull slab slam sleep slender slice slide slight slim slogan slot slow slush small smart smile smoke smooth snack snake snap sniff snow soap soccer social sock soda soft solar soldier solid solution solve someone song soon sorry sort soul sound soup source south space spare spatial spawn speak special speed spell spend sphere spice spider spike spin spirit split spoil sponsor spoon sport spot spray spread spring square squeeze squirrel stable stadium staff stage stairs stamp stand start state stay steak steel stem step stereo stick still sting stock stomach stone stool story stove strategy street strike strong struggle student stuff stumble style subject submit subway success such sudden suffer sugar suggest suit summer sun sunny sunset super supply supreme sure surface surge surprise surround survey suspect sustain swallow swamp swap swarm swear sweet swift swim swing switch sword symbol symptom syrup system table tackle tag tail talent talk tank tape target task taste tattoo taxi teach team tell ten tenant tennis tent term test text thank that theme then theory there they thing this thought three thrive throw thumb thunder ticket tide tiger tilt timber time tiny tip tired tissue title toast tobacco today toddler toe together toilet token tomato tomorrow tone tongue tonight tool tooth top topic topple torch tornado tortoise toss total tourist toward tower town toy track trade traffic tragic train transfer trap trash travel tray treat tree trend trial tribe trick trigger trim trip trophy trouble truck true truly trumpet trust truth try tube tuition tumble tuna tunnel turkey turn turtle twelve twenty twice twin twist two type typical ugly umbrella unable unaware uncle uncover under undo unfair unfold unhappy uniform unique unit universe unknown unlock until unusual unveil update upgrade uphold upon upper upset urban urge usage use used useful useless usual utility vacant vacuum vague valid valley valve van vanish vapor various vast vault vehicle velvet vendor venture venue verb verify version very vessel veteran viable vibrant vicious victory video view village vintage violin virtual virus visa visit visual vital vivid vocal voice void volcano volume vote voyage wage wagon wait walk wall walnut want warfare warm warrior wash wasp waste water wave way wealth weapon wear weather web wedding weekend weird welcome west wet whale what wheat wheel when where whip whisper wide width wife wild will win window wine wing wink winner winter wire wisdom wise wish witness wolf woman wonder wood wool word work world worry worth wrap wreck wrestle wrist write wrong yard year yellow you young youth zebra zero zone zoo".split(' ');
   WORDLIST = base.slice(0,2048);
@@ -212,165 +199,4 @@ async function entropyToMnemonic(e){
   let w=[];for(let i=0;i<bits.length;i+=11){w.push(wl[parseInt(bits.slice(i,i+11),2)]);}return w.join(' ');
 }
 async function seedToPrivKey(m){const enc=new TextEncoder();const km=await crypto.subtle.importKey('raw',enc.encode(m),'PBKDF2',false,['deriveBits']);const bits=await crypto.subtle.deriveBits({name:'PBKDF2',salt:enc.encode('mnemonic'),iterations:2048,hash:'SHA-512'},km,512);const seed=new Uint8Array(bits);let priv=seed.slice(0,32);if(bytesToBigInt(priv)%N===0n)priv[31]=1;return priv;}
-async function deriveKey(pin,salt){const enc=new TextEncoder();const km=await crypto.subtle.importKey('raw',enc.encode(pin),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name:'PBKDF2',salt:salt,iterations:100000,hash:'SHA-256'},km,{name:'AES-GCM',length:256},false,['encrypt','decrypt']);}
-async function encryptPriv(hex,pin){const salt=crypto.getRandomValues(new Uint8Array(16));const iv=crypto.getRandomValues(new Uint8Array(12));const k=await deriveKey(pin,salt);const enc=await crypto.subtle.encrypt({name:'AES-GCM',iv:iv},k,new TextEncoder().encode(hex));return JSON.stringify({salt:bytesToHex(salt),iv:bytesToHex(iv),data:bytesToHex(new Uint8Array(enc))});}
-async function decryptPriv(s,pin){const o=JSON.parse(s);const k=await deriveKey(pin,hexToBytes(o.salt));const d=await crypto.subtle.decrypt({name:'AES-GCM',iv:hexToBytes(o.iv)},k,hexToBytes(o.data));return new TextDecoder().decode(d);}
-let currentAddress="",currentPrivHex="",currentSeed="",currentEth="",p2pFilter="buy",currentBTCPriceNGN=145000000,btcAlert=null;
-function setP2PFilter(f){p2pFilter=f;document.getElementById('p2pBuyBtn').classList.toggle('active',f==='buy');document.getElementById('p2pSellBtn').classList.toggle('active',f==='sell');loadP2P();}
-function switchTab(name){['home','send','receive','buy','p2p','market','history'].forEach(t=>{let el=document.getElementById('tab-'+t);if(el)el.classList.toggle('hidden',t!==name);});document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));const map={home:0,send:1,receive:2,buy:3,p2p:4,market:5,history:6};let tabs=document.querySelectorAll('.tab');if(map[name]!==undefined)tabs[map[name]].classList.add('active');if(name==='history')loadHistory();if(name==='market'){loadMarket();try{initChart('BINANCE:BTCUSDT');}catch(e){}}if(name==='p2p')loadP2P();if(name==='buy' && currentAddress)document.getElementById('buyAddr').innerText=currentAddress;if(name==='send'){document.getElementById('sendBal').innerText=document.getElementById('coinBtc').innerText;}}
-window.onload=()=>{
-  try{
-    const s=localStorage.getItem('easypay_encrypted');
-    if(s){document.getElementById('startScreen').classList.add('hidden');document.getElementById('lockScreen').classList.remove('hidden');}
-  }catch(e){console.log(e);}
-  try{loadMarket();}catch(e){console.log('Market failed',e);}
-};
-async function createWallet(){
-  const btn=document.getElementById('createBtn');
-  try{
-    const pin=document.getElementById('newPin').value;const pin2=document.getElementById('newPin2').value;
-    if(pin.length<4){alert('PIN must be 4-6 digits');return;}
-    if(pin!==pin2){alert('PINs do not match');return;}
-    if(btn) btn.innerText='Creating... Please wait';
-    document.getElementById('createStatus').innerText='Creating wallet... Do not close';
-    const e=new Uint8Array(16);crypto.getRandomValues(e);
-    const m=await entropyToMnemonic(e);
-    const priv=await seedToPrivKey(m);
-    const hex=bytesToHex(priv);
-    const addr=await privKeyToAddress(priv);
-    const eth=ethAddressFromPriv(priv);
-    const enc=await encryptPriv(JSON.stringify({hex:hex,seed:m}),pin);
-    localStorage.setItem('easypay_encrypted',enc);
-    currentAddress=addr;currentPrivHex=hex;currentSeed=m;currentEth=eth;
-    alert('Wallet created! Write down your 12 words!');
-    await showWallet(addr,hex,m,eth,priv);
-  }catch(err){
-    console.error('Create wallet error:',err);
-    alert('Create failed: '+err.message);
-    document.getElementById('createStatus').innerText='Error: '+err.message;
-    if(btn) btn.innerText='+ Create New Wallet';
-  }
-}
-async function importWallet(){
-  try{
-    let input=document.getElementById('importSeed').value.trim();let pin=document.getElementById('importPin').value;
-    if(pin.length<4){alert('Set PIN 4-6 digits');return;}
-    let priv,m;
-    if(input.split(/\s+/).length===12){m=input.toLowerCase();priv=await seedToPrivKey(m);}
-    else if(input.length===64){m='(Imported from key)';priv=hexToBytes(input.toLowerCase());}
-    else{alert('Paste 12 words OR 64-char hex');return;}
-    const hex=bytesToHex(priv);const addr=await privKeyToAddress(priv);const eth=ethAddressFromPriv(priv);
-    const enc=await encryptPriv(JSON.stringify({hex:hex,seed:m}),pin);localStorage.setItem('easypay_encrypted',enc);
-    currentAddress=addr;currentPrivHex=hex;currentSeed=m;currentEth=eth;await showWallet(addr,hex,m,eth,priv);
-  }catch(e){alert('Import failed: '+e.message);}
-}
-async function unlockWallet(){const pin=document.getElementById('unlockPin').value;const saved=localStorage.getItem('easypay_encrypted');try{const dec=await decryptPriv(saved,pin);let obj;try{obj=JSON.parse(dec);}catch(e){obj={hex:dec,seed:'(Old wallet)'};}if(obj.hex.length!==64)throw new Error('bad');const addr=await privKeyToAddress(hexToBytes(obj.hex));const eth=ethAddressFromPriv(hexToBytes(obj.hex));currentAddress=addr;currentPrivHex=obj.hex;currentSeed=obj.seed;currentEth=eth;document.getElementById('lockScreen').classList.add('hidden');await showWallet(addr,obj.hex,obj.seed,eth,hexToBytes(obj.hex));}catch(e){document.getElementById('unlockErr').innerText='Wrong PIN';}}
-function lockWallet(){currentPrivHex="";currentAddress="";currentSeed="";document.getElementById('walletScreen').classList.add('hidden');document.getElementById('bottomTabs').classList.add('hidden');document.getElementById('lockScreen').classList.remove('hidden');}
-function forgetWallet(){if(confirm('Delete? Have 12 words?')){localStorage.removeItem('easypay_encrypted');location.reload();}}
-async function showWallet(mainAddr,hex,seed,eth,priv){document.getElementById('seedDisplay').innerText=seed;document.getElementById('mnemonicDisplay').innerText=hex;document.getElementById('addressDisplay').innerText=mainAddr;document.getElementById('btcAddr').innerText=mainAddr;document.getElementById('ethAddr').innerText=eth;document.getElementById('usdtAddr').innerText=eth+' (ERC20)';document.getElementById('receiveAddr').innerText=mainAddr;document.getElementById('receiveEth').innerText=eth;document.getElementById('buyAddr').innerText=mainAddr;document.getElementById('qrText').innerText='bitcoin:'+mainAddr;document.getElementById('startScreen').classList.add('hidden');document.getElementById('lockScreen').classList.add('hidden');document.getElementById('walletScreen').classList.remove('hidden');document.getElementById('bottomTabs').classList.remove('hidden');switchTab('home');checkBalance();loadHistory();loadMarket();}
-async function checkBalance(){
-  if(!currentAddress) return;
-  document.getElementById('balanceDisplay').innerText='Loading...';
-  try{
-    const r=await fetch('/api/balance/'+currentAddress);
-    const d=await r.json();
-    document.getElementById('balanceDisplay').innerText=(d.btc||0).toFixed(8)+' BTC';
-    document.getElementById('coinBtc').innerText=(d.btc||0).toFixed(8);
-    document.getElementById('usdDisplay').innerText=d.usd||'0.00';
-    document.getElementById('onchainDisplay').innerText=d.onchainSats||0;
-  }catch(e){ document.getElementById('balanceDisplay').innerText='0.00000000 BTC'; }
-}
-async function loadHistory(){
-  try{
-    const r=await fetch('/api/history/'+currentAddress); const txs=await r.json();
-    if(!txs||!txs.length){ document.getElementById('historyList').innerHTML='<p class="small">No transactions yet.</p>'; return; }
-    let h='';
-    for(let tx of txs.slice(0,20)){
-      let isDemo = tx.source==='demo';
-      if(isDemo) continue; // hide demo, show real only
-      h+='<div class="tx"><b>'+(tx.type==='received'?'↓ Received':'↑ Sent')+'</b> '+(tx.amountSats/100000000).toFixed(8)+' BTC<br><span class="small">'+tx.txid.slice(0,20)+'... • '+tx.status+'</span></div>';
-    }
-    if(!h) h='<p class="small">No real transactions yet.</p>';
-    document.getElementById('historyList').innerHTML=h;
-  }catch(e){}
-}
-function copyAddress(){navigator.clipboard.writeText(currentAddress);alert('Copied: '+currentAddress);} function copyEth(){navigator.clipboard.writeText(currentEth);alert('Copied ETH: '+currentEth);} function copySeed(){navigator.clipboard.writeText(currentSeed);alert('Seed copied!');} function copyPriv(){navigator.clipboard.writeText(currentPrivHex);alert('Private key copied!');}
-async function loadMarket(){
-  try{
-    const r=await fetch('/api/market');const d=await r.json();
-    const btc=d.bitcoin||{usd:97000,ngn:145000000}; const eth=d.ethereum||{usd:3400,ngn:5100000}; const usdt=d.tether||{usd:1,ngn:1520}; const sol=d.solana||{usd:210,ngn:315000};
-    currentBTCPriceNGN=btc.ngn||145000000;
-    const calcEl=document.getElementById('calcPrice'); if(calcEl) calcEl.innerText='₦'+currentBTCPriceNGN.toLocaleString();
-    let html='<div class="market-row"><div><b>₿ Bitcoin</b><div class="small">BTC</div></div><div class="price">$'+btc.usd.toLocaleString()+'<br><span class="small">₦'+(btc.ngn||0).toLocaleString()+'</span></div></div>';
-    html+='<div class="market-row"><div><b>Ξ Ethereum</b><div class="small">ETH</div></div><div class="price">$'+eth.usd.toLocaleString()+'<br><span class="small">₦'+(eth.ngn||0).toLocaleString()+'</span></div></div>';
-    html+='<div class="market-row"><div><b>₮ USDT</b><div class="small">USDT</div></div><div class="price">$'+usdt.usd+'<br><span class="small">₦'+(usdt.ngn||1520).toLocaleString()+'</span></div></div>';
-    html+='<div class="market-row"><div><b>◉ Solana</b><div class="small">SOL</div></div><div class="price">$'+sol.usd.toLocaleString()+'<br><span class="small">₦'+(sol.ngn||0).toLocaleString()+'</span></div></div>';
-    html+='<div class="market-row"><div><b>💵 USD/NGN</b><div class="small">Dollar Rate</div></div><div class="price">₦'+(usdt.ngn||1520).toLocaleString()+'</div></div>';
-    const ml=document.getElementById('marketList'); if(ml) ml.innerHTML=html;
-    const pm=document.getElementById('publicMarket'); if(pm) pm.innerHTML=html;
-    const set=(id,val)=>{const el=document.getElementById(id); if(el) el.innerText=val;};
-    set('btcPrice','$'+btc.usd.toLocaleString()); set('ethPrice','$'+eth.usd.toLocaleString()); set('usdtPrice','₦'+(usdt.ngn||1520).toLocaleString()); set('solPrice','$'+sol.usd.toLocaleString());
-    set('fx-BTCUSD-p','$'+btc.usd.toLocaleString()); set('fx-ETHUSD-p','$'+eth.usd.toLocaleString()); set('fx-USDNGN-p','₦'+(usdt.ngn||1520).toLocaleString());
-    if(btcAlert && btc.usd>=btcAlert){alert('🔔 BTC hit $'+btc.usd+'! Your alert triggered.'); btcAlert=null; document.getElementById('alertStatus').innerText='Alert triggered!';}
-  }catch(e){const ml=document.getElementById('marketList'); if(ml) ml.innerHTML='<p class="small">Could not load prices. Check internet.</p>';}
-}
-function calcBuy(){let ngn=parseFloat(document.getElementById('calcNGN').value||0);let btc=ngn/currentBTCPriceNGN;document.getElementById('calcResult').innerText='You will get: '+btc.toFixed(8)+' BTC (≈ $'+(btc*97000).toFixed(2)+')';}
-function setAlert(){let p=parseFloat(document.getElementById('alertPrice').value);if(!p){alert('Enter price');return;}btcAlert=p;document.getElementById('alertStatus').innerText='✅ Alert set: Notify when BTC >= $'+p.toLocaleString();alert('Alert set!');}
-async function loadP2P(){
-  const coin=document.getElementById('p2pCoin').value;
-  try{
-    const r=await fetch('/api/p2p/offers');const all=await r.json();
-    const filtered=all.filter(o=>o.coin===coin && (p2pFilter==='buy' ? o.type==='sell' : o.type==='buy'));
-    if(!filtered.length){document.getElementById('p2pList').innerHTML='<p class="small">No offers for '+coin+' right now. Create one!</p>';return;}
-    let h='';
-    for(let o of filtered){
-      h+='<div class="p2p-card"><div style="display:flex;justify-content:space-between;"><b>'+o.seller+'</b><span class="pill '+(o.type==='sell'?'pill-sell':'pill-buy')+'">'+(o.type==='sell'?'SELLING':'BUYING')+' '+o.coin+'</span></div><div style="font-size:20px;font-weight:bold;margin:8px 0;">₦'+o.priceNGN.toLocaleString()+' <span class="small">/ '+o.coin+'</span></div><div class="small">⭐ '+o.rating+' • '+o.trades+' trades • '+o.payment+'</div><div class="small">Limit: ₦'+o.min.toLocaleString()+' - ₦'+o.max.toLocaleString()+'</div><div class="small">Contact: '+(o.contact||o.seller)+'</div><button class="green" onclick="startP2PTrade('+o.id+')">Trade Now →</button></div>';
-    }
-    document.getElementById('p2pList').innerHTML=h;
-  }catch(e){document.getElementById('p2pList').innerHTML='<p class="small">Could not load P2P.</p>';}
-}
-function startP2PTrade(id){alert('P2P Trade #'+id+'\n\n1. You send Naira to seller bank\n2. Seller releases BTC to your EasyPay wallet\n3. Backend confirms\n\nContact seller via their WhatsApp in the offer.');}
-async function createOffer(){
-  const seller=document.getElementById('sellerName').value||'Guest';
-  const type=document.getElementById('newOfferType').value; const coin=document.getElementById('newOfferCoin').value; const price=document.getElementById('newOfferPrice').value; const min=document.getElementById('newOfferMin').value; const max=document.getElementById('newOfferMax').value; const pay=document.getElementById('newOfferPay').value; const contact=document.getElementById('newOfferContact').value||seller;
-  if(!price||!min||!max){alert('Fill price/min/max');return;}
-  try{const r=await fetch('/api/p2p/create',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({seller,type,coin,priceNGN:price,min,max,payment:pay,contact,address:currentAddress})});const d=await r.json();if(d.success){document.getElementById('p2pCreateStatus').innerText='✅ Offer published!';loadP2P();}}catch(e){alert(e.message);}
-}
-let tvWidget=null;
-function initChart(symbol){try{document.getElementById('tradingview-widget').innerHTML='';tvWidget=new TradingView.widget({autosize:true,symbol:symbol,interval:'15',timezone:'Africa/Lagos',theme:'dark',style:'1',locale:'en',toolbar_bg:'#111',enable_publishing:false,hide_side_toolbar:false,container_id:'tradingview-widget'});}catch(e){document.getElementById('tradingview-widget').innerHTML='<p class="small">Chart loading... Check internet.</p>';}}
-function setChart(symbol,label){document.getElementById('chartTitle').innerText='Chart: '+label;document.querySelectorAll('.forex-card').forEach(c=>c.classList.remove('active'));initChart(symbol);}
-function varint(n){if(n<253)return new Uint8Array([n]);if(n<65536){let b=new Uint8Array(3);b[0]=253;b[1]=n&0xff;b[2]=(n>>8)&0xff;return b;}return new Uint8Array([253,0,0]);}
-function concat(...arrs){let len=arrs.reduce((a,b)=>a+b.length,0);let out=new Uint8Array(len);let o=0;for(let a of arrs){out.set(a,o);o+=a.length;}return out;}
-function u32le(n){let b=new Uint8Array(4);b[0]=n&0xff;b[1]=(n>>8)&0xff;b[2]=(n>>16)&0xff;b[3]=(n>>24)&0xff;return b;}
-function u64le(n){let b=new Uint8Array(8);let bn=BigInt(n);for(let i=0;i<8;i++){b[i]=Number(bn&0xffn);bn>>=8n;}return b;}
-async function hmacSha256(k,d){const ck=await crypto.subtle.importKey('raw',k,{name:'HMAC',hash:'SHA-256'},false,['sign']);const s=await crypto.subtle.sign('HMAC',ck,d);return new Uint8Array(s);}
-async function rfc6979(priv,hash){let x=priv;let h1=hash;let v=new Uint8Array(32).fill(1);let k=new Uint8Array(32).fill(0);k=await hmacSha256(k,concat(v,new Uint8Array([0]),x,h1));v=await hmacSha256(k,v);k=await hmacSha256(k,concat(v,new Uint8Array([1]),x,h1));v=await hmacSha256(k,v);while(true){v=await hmacSha256(k,v);let c=bytesToBigInt(v);if(c>0n&&c<N)return v;k=await hmacSha256(k,concat(v,new Uint8Array([0])));v=await hmacSha256(k,v);}}
-async function ecdsaSign(priv,hash){let z=bytesToBigInt(hash);let p=bytesToBigInt(priv);let kb=await rfc6979(priv,hash);let k=bytesToBigInt(kb);let R=scalarMult(k,[Gx,Gy]);let r=R[0]%N;let s=mod(modInv(k,N)*(z+r*p),N);if(s>N/2n)s=N-s;return {r,s};}
-function derEncode(r,s){function encInt(v){let b=bigIntToBytes(v,32);let i=0;while(i<31&&b[i]===0)i++;b=b.slice(i);if(b[0]&0x80)b=concat(new Uint8Array([0]),b);return concat(new Uint8Array([2,b.length]),b);}let rb=encInt(r);let sb=encInt(s);let t=concat(rb,sb);return concat(new Uint8Array([0x30,t.length]),t);}
-async function sendTx(){
-  const to=document.getElementById('sendTo').value.trim();const amt=parseFloat(document.getElementById('sendAmt').value);const fee=parseFloat(document.getElementById('sendFee').value||'0.00002');
-  if(!to||!amt){alert('Fill address and amount');return;}
-  if(!confirm('Send '+amt+' REAL BTC to '+to+' ?'))return;
-  document.getElementById('sendStatus').innerText='Fetching UTXOs...';
-  try{
-    const res=await fetch('/api/utxos/'+currentAddress);const utxos=await res.json();
-    if(!utxos||!utxos.length){alert('No real funds. Buy BTC first via Buy tab, then send.');return;}
-    const need=Math.round(amt*100000000)+Math.round(fee*100000000);let sel=[];let tot=0;for(let u of utxos){sel.push(u);tot+=u.value;if(tot>=need)break;}if(tot<need){alert('Not enough. Need '+need+', have '+tot);return;}
-    const change=tot-need;const toHash=addressToHash160(to);const myHash=addressToHash160(currentAddress);const myPub=getPubKeyCompressed(hexToBytes(currentPrivHex));const priv=hexToBytes(currentPrivHex);
-    function p2pkh(h){return concat(new Uint8Array([0x76,0xa9,0x14]),h,new Uint8Array([0x88,0xac]));}
-    let inputs=sel;let outs=[];outs.push({value:Math.round(amt*100000000),script:p2pkh(toHash)});if(change>546)outs.push({value:change,script:p2pkh(myHash)});
-    async function build(sigs){let parts=[u32le(1)];parts.push(varint(inputs.length));for(let i=0;i<inputs.length;i++){let txb=hexToBytes(inputs[i].txid).reverse();parts.push(txb);parts.push(u32le(inputs[i].vout));parts.push(varint(sigs[i].length));parts.push(sigs[i]);parts.push(u32le(0xffffffff));}parts.push(varint(outs.length));for(let o of outs){parts.push(u64le(o.value));parts.push(varint(o.script.length));parts.push(o.script);}parts.push(u32le(0));return concat(...parts);}
-    let final=[];for(let idx=0;idx<inputs.length;idx++){let shSigs=inputs.map((_,i)=>i===idx?p2pkh(myHash):new Uint8Array(0));let txH=await build(shSigs);let pre=concat(txH,u32le(1));let sh=await sha256d(pre);let sig=await ecdsaSign(priv,sh);let der=derEncode(sig.r,sig.s);let sigH=concat(der,new Uint8Array([1]));let ss=concat(new Uint8Array([sigH.length]),sigH,new Uint8Array([myPub.length]),myPub);final.push(ss);}
-    let raw=await build(final);let hexTx=bytesToHex(raw);document.getElementById('sendStatus').innerText='Broadcasting...';
-    const bRes=await fetch('/api/send',{method:'POST',headers:{'Content-Type':'application/json'},body:JSON.stringify({hex:hexTx,from:currentAddress,to:to,amountSats:Math.round(amt*100000000)})});const resJ=await bRes.json();const txid=resJ.txid||resJ.error;
-    if(bRes.ok){
-      document.getElementById('sendStatus').innerText='Broadcasted! '+txid;
-      document.getElementById('confirmBox').classList.remove('hidden');document.getElementById('confirmBox').innerText='⏳ PENDING: '+txid;
-      setTimeout(async()=>{try{const c=await fetch('/api/confirm/'+txid).then(r=>r.json());document.getElementById('confirmBox').innerText='Status: '+c.status+' • '+txid;}catch(e){}checkBalance();loadHistory();},8000);
-      checkBalance();loadHistory();
-    }else{alert('Failed: '+txid);}
-  }catch(e){alert('ERROR: '+e.message);}
-}
-</script>
-</body>
-                                                      </html>
+async function deriveKey(pin,salt){const enc=new TextEncoder();const km=await crypto.subtle.importKey('raw',enc.encode(pin),'PBKDF2',false,['deriveKey']);return crypto.subtle.deriveKey({name
