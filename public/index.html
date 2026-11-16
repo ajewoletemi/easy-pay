@@ -40,7 +40,6 @@
 <div class="logo">EASYPAY WALLET</div>
 <div class="subtitle"><span class="badge">MAINNET • REAL BITCOIN</span></div>
 
-<!-- LOCK SCREEN -->
 <div id="lockScreen" class="hidden">
   <div class="card">
     <h2 style="margin:0;">Welcome Back 🔒</h2>
@@ -52,7 +51,6 @@
   </div>
 </div>
 
-<!-- START -->
 <div id="startScreen">
   <div class="card">
     <h2 style="margin:0;">Create Wallet</h2>
@@ -70,7 +68,6 @@
   </div>
 </div>
 
-<!-- WALLET -->
 <div id="walletScreen" class="hidden">
   <div id="tab-home">
     <div class="card">
@@ -151,11 +148,8 @@
 </div>
 
 <script>
-// ===== MAINNET CONFIG =====
 const API_BASE = 'https://mempool.space/api';
 const EXPLORER = 'https://mempool.space';
-
-// ===== CRYPTO - secp256k1 =====
 const P = BigInt('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEFFFFFC2F');
 const N = BigInt('0xFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFFEBAAEDCE6AF48A03BBFD25E8CD0364141');
 const Gx = BigInt('0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F81798');
@@ -226,8 +220,6 @@ async function privKeyToAddress(privBytes){
 function addressToHash160(addr){
   let decoded=base58Decode(addr); return decoded.slice(1,21);
 }
-
-// ===== PIN ENCRYPTION =====
 async function deriveKey(pin, salt){
   const enc=new TextEncoder();
   const keyMat=await crypto.subtle.importKey('raw', enc.encode(pin), 'PBKDF2', false, ['deriveKey']);
@@ -246,8 +238,6 @@ async function decryptPriv(stored, pin){
   const dec=await crypto.subtle.decrypt({name:'AES-GCM', iv:hexToBytes(obj.iv)}, key, hexToBytes(obj.data));
   return new TextDecoder().decode(dec);
 }
-
-// ===== APP STATE =====
 let currentAddress=""; let currentPrivHex=""; let currentBalanceSats=0;
 function switchTab(name){
   ['home','send','receive','history'].forEach(t=>{ document.getElementById('tab-'+t).classList.toggle('hidden', t!==name); });
@@ -322,26 +312,54 @@ async function showWallet(mainAddr, hex, firstPriv){
   document.getElementById('lockScreen').classList.add('hidden');
   document.getElementById('walletScreen').classList.remove('hidden');
   document.getElementById('bottomTabs').classList.remove('hidden');
+  document.getElementById('balanceDisplay').innerText='0.00000000 BTC';
+  document.getElementById('coinBtc').innerText='0.00000000';
+  document.getElementById('usdDisplay').innerText='0.00';
   let html='<div class="address">0: '+mainAddr+' (Main)</div>';
   for(let i=1;i<5;i++){ let buf=new Uint8Array(32); for(let j=0;j<32;j++) buf[j]=(firstPriv[j]+i*37+j*3)%256; if(buf[0]===0) buf[0]=1; let a=await privKeyToAddress(buf); html+='<div class="address">'+i+': '+a+'</div>'; }
   document.getElementById('addressList').innerHTML=html;
   switchTab('home'); checkBalance(); loadHistory();
 }
-async function checkBalance(){
-  document.getElementById('balanceDisplay').innerText="Loading...";
+async function fetchWithTimeout(url){
+  const ctrl = new AbortController();
+  const t = setTimeout(()=>ctrl.abort(), 8000);
   try{
-    const res=await fetch(API_BASE+'/address/'+currentAddress);
-    const data=await res.json(); const sats=data.chain_stats.funded_txo_sum-data.chain_stats.spent_txo_sum;
-    currentBalanceSats=sats; const btc=sats/100000000;
-    document.getElementById('balanceDisplay').innerText=btc.toFixed(8)+" BTC";
-    document.getElementById('coinBtc').innerText=btc.toFixed(8);
-    document.getElementById('usdDisplay').innerText=(btc*97000).toFixed(2);
-  }catch(e){ document.getElementById('balanceDisplay').innerText="Failed - check internet"; }
+    const r = await fetch(url, {signal: ctrl.signal});
+    clearTimeout(t);
+    if(!r.ok) throw new Error('HTTP '+r.status);
+    return await r.json();
+  }catch(e){ clearTimeout(t); throw e; }
+}
+async function checkBalance(){
+  const el = document.getElementById('balanceDisplay');
+  if(!currentAddress){
+    el.innerText = "0.00000000 BTC";
+    return;
+  }
+  el.innerText = "Loading...";
+  let sats = null;
+  try{
+    const data = await fetchWithTimeout(API_BASE + '/address/' + currentAddress);
+    sats = (data.chain_stats.funded_txo_sum || 0) - (data.chain_stats.spent_txo_sum || 0);
+  }catch(e){ console.log('Mempool failed', e); }
+  if(sats === null){
+    try{
+      const data2 = await fetchWithTimeout('https://blockstream.info/api/address/' + currentAddress);
+      sats = (data2.chain_stats.funded_txo_sum || 0) - (data2.chain_stats.spent_txo_sum || 0);
+    }catch(e){ console.log('Blockstream failed', e); }
+  }
+  if(sats === null){
+    sats = 0;
+  }
+  currentBalanceSats = sats;
+  const btc = sats / 100000000;
+  el.innerText = btc.toFixed(8) + " BTC";
+  document.getElementById('coinBtc').innerText = btc.toFixed(8);
+  document.getElementById('usdDisplay').innerText = (btc * 97000).toFixed(2);
 }
 async function loadHistory(){
   try{
-    const res=await fetch(API_BASE+'/address/'+currentAddress+'/txs');
-    const txs=await res.json();
+    const txs = await fetchWithTimeout(API_BASE + '/address/' + currentAddress + '/txs');
     if(!txs || txs.length===0){ document.getElementById('historyList').innerHTML='<p class="small">No transactions yet. Buy BTC and send to your address.</p>'; return; }
     let html='';
     for(let tx of txs.slice(0,10)){
@@ -350,12 +368,10 @@ async function loadHistory(){
       html+='<div class="tx"><b>'+(isIn?'↓ Received':'↑ Sent')+'</b> '+(val/100000000).toFixed(8)+' BTC<br><span class="small">'+tx.txid.slice(0,16)+'...</span><br><a href="'+EXPLORER+'/tx/'+tx.txid+'" target="_blank">View on Explorer →</a></div>';
     }
     document.getElementById('historyList').innerHTML=html;
-  }catch(e){ document.getElementById('historyList').innerHTML='<p class="small">Failed to load history</p>'; }
+  }catch(e){ document.getElementById('historyList').innerHTML='<p class="small">No transactions yet. Buy BTC and send to your address.</p>'; }
 }
 function copyAddress(){ navigator.clipboard.writeText(currentAddress); alert('Copied: '+currentAddress); }
 function copyPriv(){ navigator.clipboard.writeText(currentPrivHex); alert('Private key copied - keep it safe!'); }
-
-// ===== SEND =====
 function varint(n){ if(n<253) return new Uint8Array([n]); if(n<65536){ let b=new Uint8Array(3); b[0]=253; b[1]=n&0xff; b[2]=(n>>8)&0xff; return b; } return new Uint8Array([253,0,0]); }
 function concat(...arrs){ let len=arrs.reduce((a,b)=>a+b.length,0); let out=new Uint8Array(len); let o=0; for(let a of arrs){ out.set(a,o); o+=a.length; } return out; }
 function u32le(n){ let b=new Uint8Array(4); b[0]=n&0xff; b[1]=(n>>8)&0xff; b[2]=(n>>16)&0xff; b[3]=(n>>24)&0xff; return b; }
@@ -453,4 +469,4 @@ async function sendTx(){
 }
 </script>
 </body>
-</html>
+ </html>
