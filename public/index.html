@@ -1,0 +1,69 @@
+<!DOCTYPE html>
+<html><head><meta name="viewport" content="width=device-width,initial-scale=1">
+<title>EasyPay</title>
+<style>
+body{background:#03050A;color:#0B0E14;font-family:Arial;margin:0}
+.c{padding:16px 16px 100px;max-width:520px;margin:0 auto}
+.logo{font-size:30px;font-weight:900;color:#fff;text-align:center}
+.logo span{color:#2E7DFF}
+.card{background:#EDEFF2;border-radius:24px;padding:18px;margin-top:14px;box-shadow:0 10px 26px rgba(0,0,0,.4)}
+.dark{background:linear-gradient(135deg,#0B1220,#2E7DFF,#7C4DFF);color:#fff;border-radius:26px;padding:20px}
+.big{font-size:36px;font-weight:900}
+.s{color:#5A6472;font-size:12px}
+button{border:none;padding:16px;width:100%;border-radius:16px;font-size:15px;font-weight:800;margin-top:10px;cursor:pointer;color:#fff;background:linear-gradient(135deg,#2E7DFF,#7C4DFF);box-shadow:0 8px 18px rgba(46,125,255,.4)}
+button:active{transform:scale(.97)}
+button.w{background:#fff;color:#0B0E14;border:1.5px solid #D6DAE0;box-shadow:none}
+button.g{background:linear-gradient(135deg,#00C853,#00E676)}
+input{width:100%;padding:15px;background:#fff;border:1.5px solid #D6DAE0;border-radius:14px;margin-top:10px;box-sizing:border-box}
+.addr{background:#fff;padding:12px;border-radius:12px;word-break:break-all;font-size:13px;margin:8px 0}
+.seed{background:#0B0E14;color:#fff;padding:14px;border-radius:14px;word-break:break-word;text-align:center;font-weight:700}
+.hidden{display:none}
+.grid{display:grid;grid-template-columns:repeat(3,1fr);gap:10px;margin-top:14px}
+.act{background:#fff;border-radius:18px;padding:14px 6px;text-align:center;cursor:pointer}
+.tabs{position:fixed;bottom:0;left:0;right:0;background:#05070D;display:flex;justify-content:space-around;padding:12px 0;max-width:520px;margin:0 auto;border-top:1px solid #222}
+.tab{color:#8A94A6;font-size:11px;text-align:center;flex:1;padding:6px;border-radius:12px;cursor:pointer}
+.tab.on{color:#fff;background:#2E7DFF}
+.tab span{display:block;font-size:20px}
+</style></head>
+<body>
+<div class="c">
+<div class="logo">Easy<span>Pay</span></div>
+<p id="jsCheck" style="color:#FF3B30;font-size:12px;text-align:center;">If you see this, JS NOT running - hard refresh</p>
+
+<div id="lockScreen" class="hidden"><div class="card"><h2>Welcome Back 🔒</h2><input id="unlockPin" type="password" placeholder="Enter PIN"><button onclick="unlockWallet()">Unlock Wallet</button><p id="unlockErr" style="color:red;"></p><button class="w" onclick="showCreate()">Forgot PIN? Create New</button><button class="w" onclick="clearWallet()">Delete Wallet</button></div></div>
+
+<div id="startScreen"><div class="card" style="text-align:center;"><h2>Create Wallet ✨</h2><p class="s">12-word seed = your wallet. Write it down.</p><input id="newPin" type="password" placeholder="PIN e.g. 1234"><input id="newPin2" type="password" placeholder="Confirm PIN"><button onclick="createWallet()">+ Create New Wallet</button><button class="w" onclick="testBtn()">TEST BUTTON</button><p id="createStatus" style="color:#2E7DFF;font-weight:bold;"></p><p id="debugBox" class="s"></p></div></div>
+
+<div id="walletScreen" class="hidden">
+<div id="tab-home"><div class="dark"><p style="font-size:11px;letter-spacing:1px;">TOTAL BALANCE</p><div class="big" id="bigBalance">0.00000000 BTC</div><p class="s" style="color:#D6E2FF;" id="addressDisplay">—</p></div>
+<div class="grid"><div class="act" onclick="switchTab('send')">↑<br><b>Send</b></div><div class="act" onclick="switchTab('receive')">↓<br><b>Receive</b></div><div class="act" onclick="switchTab('buy')">💳<br><b>Buy</b></div></div>
+<div class="card"><h3>Your Coins</h3><p><b>₿ Bitcoin</b> - <span id="coinBtc">0.00000000</span><br><span class="s" id="btcAddr">-</span></p><p><b>Ξ Ethereum</b><br><span class="s" id="ethAddr">-</span></p><p><b>₮ USDT</b><br><span class="s" id="usdtAddr">-</span></p></div>
+<div class="card"><h3>🔑 12-Word Seed</h3><div class="seed" id="seedDisplay"></div><button class="w" onclick="copySeed()">Copy Seed</button></div><button class="w" onclick="lockWallet()">🔒 Lock Wallet</button></div>
+
+<div id="tab-send" class="hidden"><div class="card"><h2>Send Bitcoin ↑</h2><input id="sendTo" placeholder="To address"><input id="sendAmt" placeholder="Amount BTC e.g. 0.001" type="number"><button onclick="sendTx()">🚀 Send BTC</button><p id="sendStatus"></p></div></div>
+<div id="tab-receive" class="hidden"><div class="card"><h2>Receive Bitcoin ↓</h2><p class="addr" id="receiveAddr"></p><button class="g" onclick="copyAddress()">Copy BTC Address</button></div><div class="card"><h3>Receive ETH / USDT</h3><p class="addr" id="receiveEth"></p><button class="w" onclick="copyEth()">Copy ETH Address</button></div></div>
+<div id="tab-buy" class="hidden"><div class="card"><h2>Buy Bitcoin 💳</h2><p class="addr" id="buyAddr"></p><button class="g" onclick="copyAddress()">Copy My Address</button><button onclick="window.open('https://www.binance.com/en/buy-sell-crypto?fiat=NGN&crypto=BTC','_blank')">Buy on Binance →</button><button class="w" onclick="window.open('https://www.luno.com','_blank')">Buy on Luno →</button></div></div>
+<div id="tab-history" class="hidden"><div class="card"><h2>History 🕒</h2><div id="historyList">No transactions yet.</div></div></div>
+</div>
+</div>
+<div id="bottomTabs" class="tabs hidden"><div class="tab on" onclick="switchTab('home')"><span>🏠</span>Home</div><div class="tab" onclick="switchTab('send')"><span>↑</span>Send</div><div class="tab" onclick="switchTab('receive')"><span>↓</span>Receive</div><div class="tab" onclick="switchTab('buy')"><span>💳</span>Buy</div><div class="tab" onclick="switchTab('history')"><span>🕒</span>History</div></div>
+<script>
+var W=["apple","banana","cat","dog","eagle","fish","gold","house","ice","jungle","king","lion","moon","night","ocean","peace","queen","river","sun","tiger","umbrella","wolf","zebra","book","car","tree","star","cloud","rain","fire","stone","sea","sky","rock","sand","snow","wind","leaf","rose","coin","love","hope"];
+var addr="",seed="",pin="",priv="",eth="";
+function testBtn(){alert("JS WORKS!");document.getElementById("createStatus").innerText="JS works! Enter 1234 twice.";}
+function mkSeed(){var s="";for(var i=0;i<12;i++)s+=W[Math.floor(Math.random()*W.length)]+" ";return s.trim();}
+function mkAddr(){var c="123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz";var a="1";for(var i=0;i<30;i++)a+=c[Math.floor(Math.random()*c.length)];return a;}
+function mkEth(){var c="0123456789abcdef";var a="0x";for(var i=0;i<40;i++)a+=c[Math.floor(Math.random()*16)];return a;}
+function save(){try{localStorage.setItem("easypay_simple",JSON.stringify({addr:addr,seed:seed,pin:pin,priv:priv,eth:eth}));}catch(e){}}
+function showCreate(){document.getElementById("lockScreen").classList.add("hidden");document.getElementById("startScreen").classList.remove("hidden");document.getElementById("walletScreen").classList.add("hidden");document.getElementById("bottomTabs").classList.add("hidden");}
+function clearWallet(){if(confirm("Delete wallet?")){localStorage.removeItem("easypay_simple");location.reload();}}
+function switchTab(n){["home","send","receive","buy","history"].forEach(function(t){var e=document.getElementById("tab-"+t);if(e)e.classList.toggle("hidden",t!==n);});var tabs=document.querySelectorAll(".tab");tabs.forEach(function(e){e.classList.remove("on");});var m={home:0,send:1,receive:2,buy:3,history:4};if(m[n]!==undefined)tabs[m[n]].classList.add("on");if(n==="buy")document.getElementById("buyAddr").innerText=addr;}
+function createWallet(){try{var p1=document.getElementById("newPin").value.trim();var p2=document.getElementById("newPin2").value.trim();if(p1.length<4){alert("PIN must be 4 digits. Try 1234");return;}if(p1!==p2){alert("PINs do not match");return;}seed=mkSeed();addr=mkAddr();eth=mkEth();priv="priv_"+Math.random().toString(36).slice(2);pin=p1;save();alert("Wallet Created!\n\n"+seed+"\n\nWRITE IT DOWN!");showWallet();}catch(e){alert("Error: "+e.message);}}
+function unlockWallet(){var p=document.getElementById("unlockPin").value.trim();var s=JSON.parse(localStorage.getItem("easypay_simple")||"{}");if(!s.pin){showCreate();return;}if(p===s.pin){addr=s.addr;seed=s.seed;pin=s.pin;priv=s.priv;eth=s.eth;showWallet();}else{document.getElementById("unlockErr").innerText="Wrong PIN";}}
+function lockWallet(){document.getElementById("walletScreen").classList.add("hidden");document.getElementById("bottomTabs").classList.add("hidden");document.getElementById("lockScreen").classList.remove("hidden");}
+function showWallet(){document.getElementById("seedDisplay").innerText=seed;document.getElementById("addressDisplay").innerText=addr;document.getElementById("btcAddr").innerText=addr;document.getElementById("ethAddr").innerText=eth;document.getElementById("usdtAddr").innerText=eth;document.getElementById("receiveAddr").innerText=addr;document.getElementById("receiveEth").innerText=eth;document.getElementById("buyAddr").innerText=addr;document.getElementById("startScreen").classList.add("hidden");document.getElementById("lockScreen").classList.add("hidden");document.getElementById("walletScreen").classList.remove("hidden");document.getElementById("bottomTabs").classList.remove("hidden");switchTab("home");}
+function copySeed(){alert("Seed: "+seed);}function copyAddress(){alert("Copied: "+addr);}function copyEth(){alert("Copied ETH: "+eth);}
+function sendTx(){var to=document.getElementById("sendTo").value;var amt=document.getElementById("sendAmt").value;if(!to||!amt){alert("Fill address + amount");return;}alert("Send: "+amt+" BTC to "+to);document.getElementById("sendStatus").innerText="Send requested: "+amt+" BTC";}
+window.onload=function(){var j=document.getElementById("jsCheck");if(j)j.style.display="none";var dbg=document.getElementById("debugBox");var saved=localStorage.getItem("easypay_simple");if(dbg)dbg.innerText="JS OK! Saved: "+(saved?"YES - Login":"NO - Create");if(saved){try{var o=JSON.parse(saved);if(o&&o.pin){document.getElementById("startScreen").classList.add("hidden");document.getElementById("lockScreen").classList.remove("hidden");return;}}catch(e){}}};
+</script>
+</body></html>
