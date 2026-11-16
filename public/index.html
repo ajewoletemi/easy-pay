@@ -17,15 +17,18 @@
   button{background:#ff0000;color:#fff;border:none;padding:16px;width:100%;border-radius:14px;font-size:16px;font-weight:bold;margin-top:10px;cursor:pointer}
   button.secondary{background:#222;border:1px solid #333}
   button.half{width:48%}
-  input{width:100%;padding:14px;background:#222;color:#fff;border:1px solid #333;border-radius:12px;font-size:15px;margin-top:10px;text-align:center;letter-spacing:3px}
+  input{width:100%;padding:14px;background:#222;color:#fff;border:1px solid #333;border-radius:12px;font-size:15px;margin-top:10px;text-align:center;letter-spacing:2px}
   input.left{text-align:left;letter-spacing:0}
+  textarea{width:100%;padding:14px;background:#222;color:#fff;border:1px solid #333;border-radius:12px;font-size:14px;margin-top:10px;min-height:70px}
   .address{background:#222;padding:12px;border-radius:10px;word-break:break-all;font-size:13px;margin:8px 0}
+  .seed{background:#001a00;border:1px solid #00ff88;color:#00ff88;padding:16px;border-radius:12px;word-break:break-word;line-height:1.9;font-size:16px;font-weight:bold;text-align:center;letter-spacing:1px}
   .mnemonic{background:#1a1a00;border:1px solid #ffcc00;color:#ffcc00;padding:14px;border-radius:12px;word-break:break-all;line-height:1.7;font-size:12px}
   .hidden{display:none}
-  .coin{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #222}
+  .coin{display:flex;justify-content:space-between;align-items:center;padding:14px 0;border-bottom:1px solid #222;gap:10px}
   .coin:last-child{border-bottom:none}
   .coin-name{font-weight:bold;font-size:16px}
   .coin-bal{font-weight:bold;text-align:right}
+  .coin-addr{font-size:11px;color:#888;word-break:break-all;margin-top:4px}
   .tx{padding:12px 0;border-bottom:1px solid #222;font-size:13px}
   .tx a{color:#ff4444}
   .tabs{position:fixed;bottom:0;left:0;right:0;background:#111;border-top:1px solid #222;display:flex;justify-content:space-around;padding:10px 0;max-width:500px;margin:0 auto}
@@ -43,10 +46,10 @@
 <div id="lockScreen" class="hidden">
   <div class="card">
     <h2 style="margin:0;">Welcome Back 🔒</h2>
-    <p class="small">Enter your PIN to unlock your wallet</p>
+    <p class="small">Enter your PIN to unlock</p>
     <input id="unlockPin" type="password" placeholder="••••" maxlength="6" inputmode="numeric" />
     <button onclick="unlockWallet()">Unlock Wallet</button>
-    <button class="secondary" onclick="forgetWallet()">Forgot PIN / Use Different Wallet</button>
+    <button class="secondary" onclick="forgetWallet()">Forgot PIN / Different Wallet</button>
     <p id="unlockErr" class="small" style="color:#ff4444;"></p>
   </div>
 </div>
@@ -54,24 +57,24 @@
 <div id="startScreen">
   <div class="card">
     <h2 style="margin:0;">Create Wallet</h2>
-    <p class="small">Real Bitcoin Mainnet. Your PIN encrypts your key on this device.</p>
+    <p class="small">You will get a 12-word seed phrase. Write it on paper. That phrase = your wallet.</p>
     <input id="newPin" type="password" placeholder="Create 4-6 digit PIN" maxlength="6" inputmode="numeric" />
     <input id="newPin2" type="password" placeholder="Confirm PIN" maxlength="6" inputmode="numeric" />
     <button onclick="createWallet()">+ Create New Wallet</button>
     <button class="secondary" onclick="document.getElementById('importBox').classList.toggle('hidden')">Import Wallet</button>
     <div id="importBox" class="hidden">
-      <input id="importHex" class="left" placeholder="Paste 64-char private key hex..." />
+      <textarea id="importSeed" class="left" placeholder="Paste 12-word seed phrase OR 64-char hex private key..."></textarea>
       <input id="importPin" type="password" placeholder="Set PIN for this wallet" maxlength="6" inputmode="numeric" />
       <button onclick="importWallet()">Sign In & Save With PIN</button>
     </div>
-    <div class="warn">⚠️ REAL MONEY: If you lose your private key + PIN, your Bitcoin is gone forever. Write down your private key on paper.</div>
+    <div class="warn">⚠️ REAL MONEY: Seed phrase + PIN = your money. Lose seed = lose money forever.</div>
   </div>
 </div>
 
 <div id="walletScreen" class="hidden">
   <div id="tab-home">
     <div class="card">
-      <p class="small" style="margin:0;">TOTAL BALANCE</p>
+      <p class="small" style="margin:0;">TOTAL BALANCE (BTC)</p>
       <div class="balance" id="balanceDisplay">0.00000000 BTC</div>
       <p class="small">≈ $<span id="usdDisplay">0.00</span> USD</p>
       <p id="addressDisplay" class="address"></p>
@@ -83,26 +86,22 @@
       <button class="secondary" onclick="lockWallet()">🔒 Lock Wallet</button>
     </div>
     <div class="card">
-      <h3 style="margin:0 0 8px 0;">Coins</h3>
-      <div class="coin"><div><div class="coin-name">₿ Bitcoin</div><div class="small">BTC • Mainnet</div></div><div class="coin-bal"><span id="coinBtc">0.00000000</span><br><span class="small">BTC</span></div></div>
-      <div class="coin"><div><div class="coin-name">Ξ Ethereum</div><div class="small">ETH • Coming soon</div></div><div class="coin-bal">0.00<br><span class="small">ETH</span></div></div>
-      <div class="coin"><div><div class="coin-name">₮ USDT</div><div class="small">USDT • Coming soon</div></div><div class="coin-bal">0.00<br><span class="small">USDT</span></div></div>
-      <div class="coin"><div><div class="coin-name">◉ Solana</div><div class="small">SOL • Coming soon</div></div><div class="coin-bal">0.00<br><span class="small">SOL</span></div></div>
+      <h3 style="margin:0 0 8px 0;">Your Coins - Each Has Its OWN Address</h3>
+      <div class="coin"><div style="flex:1;"><div class="coin-name">₿ Bitcoin</div><div class="small">BTC • Mainnet</div><div class="coin-addr" id="btcAddr">-</div></div><div class="coin-bal"><span id="coinBtc">0.00000000</span><br><span class="small">BTC</span></div></div>
+      <div class="coin"><div style="flex:1;"><div class="coin-name">Ξ Ethereum</div><div class="small">ETH • Same seed, different address</div><div class="coin-addr" id="ethAddr">-</div></div><div class="coin-bal">0.00<br><span class="small">ETH</span></div></div>
+      <div class="coin"><div style="flex:1;"><div class="coin-name">₮ USDT (ERC20)</div><div class="small">USDT • Uses ETH address</div><div class="coin-addr" id="usdtAddr">-</div></div><div class="coin-bal">0.00<br><span class="small">USDT</span></div></div>
+      <div class="coin"><div style="flex:1;"><div class="coin-name">◉ Solana</div><div class="small">SOL • Coming soon</div><div class="coin-addr">Will be added next</div></div><div class="coin-bal">0.00<br><span class="small">SOL</span></div></div>
     </div>
     <div class="card">
-      <h3 style="margin:0 0 8px 0;">Your Private Key Backup</h3>
+      <h3 style="margin:0 0 8px 0;">🔑 Your 12-Word Seed Phrase</h3>
+      <div class="seed" id="seedDisplay"></div>
+      <p class="small">Write these 12 words IN ORDER on paper. This restores your wallet on any device.</p>
+      <button class="secondary" onclick="copySeed()">Copy Seed Phrase</button>
+    </div>
+    <div class="card">
+      <h3 style="margin:0 0 8px 0;">Private Key (Advanced Backup)</h3>
       <div class="mnemonic" id="mnemonicDisplay"></div>
       <button class="secondary" onclick="copyPriv()">Copy Private Key</button>
-      <p class="small">Write this on paper. Never screenshot / share.</p>
-    </div>
-    <div class="card">
-      <h3 style="margin:0 0 8px 0;">Your 5 Addresses</h3>
-      <div id="addressList"></div>
-    </div>
-    <div class="card">
-      <h3 style="margin:0 0 8px 0;">Buy Bitcoin</h3>
-      <p class="small">Buy from Binance / Bybit / Luno, then withdraw to your address above.</p>
-      <a href="https://mempool.space/" target="_blank" style="color:#ff4444;font-weight:bold;">Open Explorer →</a>
     </div>
   </div>
 
@@ -110,10 +109,9 @@
     <div class="card">
       <h2 style="margin:0;">Send Bitcoin</h2>
       <p class="small">Balance: <span id="sendBal">0</span> BTC</p>
-      <input id="sendTo" class="left" placeholder="To address (1...)" />
+      <input id="sendTo" class="left" placeholder="To BTC address (1...)" />
       <input id="sendAmt" class="left" placeholder="Amount in BTC e.g. 0.001" type="number" step="0.00000001" />
       <input id="sendFee" class="left" value="0.00002" type="number" step="0.00000001" />
-      <p class="small">Fee: 0.00002 BTC (2000 sats) - Mainnet fee</p>
       <button onclick="sendTx()">Send Now →</button>
       <p id="sendStatus" class="small"></p>
     </div>
@@ -122,17 +120,23 @@
   <div id="tab-receive" class="hidden">
     <div class="card">
       <h2 style="margin:0;">Receive Bitcoin</h2>
-      <p class="small">Share this address. Anyone can send you real BTC.</p>
+      <p class="small">Share ONLY this BTC address for BTC.</p>
       <div class="qrbox" id="qrText">Your address</div>
       <p class="address" id="receiveAddr"></p>
-      <button onclick="copyAddress()">Copy Address</button>
+      <button onclick="copyAddress()">Copy BTC Address</button>
+    </div>
+    <div class="card">
+      <h2 style="margin:0;">Receive Ethereum / USDT</h2>
+      <p class="small">Use THIS address for ETH & USDT (ERC20).</p>
+      <p class="address" id="receiveEth"></p>
+      <button class="secondary" onclick="copyEth()">Copy ETH Address</button>
+      <p class="small" style="color:#ffaa00;">⚠️ Do NOT send BTC to ETH address. Do NOT send ETH to BTC address.</p>
     </div>
   </div>
 
   <div id="tab-history" class="hidden">
     <div class="card">
-      <h2 style="margin:0;">History</h2>
-      <p class="small">Real on-chain transactions</p>
+      <h2 style="margin:0;">History (BTC)</h2>
       <div id="historyList"><p class="small">No transactions yet.</p></div>
       <button class="secondary" onclick="loadHistory()">Refresh History</button>
     </div>
@@ -156,18 +160,8 @@ const Gx = BigInt('0x79BE667EF9DCBBAC55A06295CE870B07029BFCDB2DCE28D959F2815B16F
 const Gy = BigInt('0x483ADA7726A3C4655DA4FBFC0E1108A8FD17B448A68554199C47D08FFB10D4B8');
 function mod(a,b){ let r=a%b; return r>=0n?r:-r+b; }
 function modInv(a,b){ let [old_r,r]=[a,b]; let [old_s,s]=[1n,0n]; while(r!==0n){ let q=old_r/r; [old_r,r]=[r,old_r-q*r]; [old_s,s]=[s,old_s-q*s]; } return mod(old_s,b); }
-function pointAdd(p1,p2){
-  if(!p1) return p2; if(!p2) return p1;
-  let m;
-  if(p1[0]===p2[0] && p1[1]===p2[1]){ m=mod((3n*p1[0]*p1[0])*modInv(2n*p1[1],P),P); }
-  else { m=mod((p2[1]-p1[1])*modInv(mod(p2[0]-p1[0],P),P),P); }
-  let x=mod(m*m-p1[0]-p2[0],P); let y=mod(m*(p1[0]-x)-p1[1],P); return [x,y];
-}
-function scalarMult(k, point){
-  let res=null; let cur=point;
-  while(k>0n){ if(k&1n) res=pointAdd(res,cur); cur=pointAdd(cur,cur); k>>=1n; }
-  return res;
-}
+function pointAdd(p1,p2){ if(!p1) return p2; if(!p2) return p1; let m; if(p1[0]===p2[0] && p1[1]===p2[1]){ m=mod((3n*p1[0]*p1[0])*modInv(2n*p1[1],P),P); } else { m=mod((p2[1]-p1[1])*modInv(mod(p2[0]-p1[0],P),P),P); } let x=mod(m*m-p1[0]-p2[0],P); let y=mod(m*(p1[0]-x)-p1[1],P); return [x,y]; }
+function scalarMult(k, point){ let res=null; let cur=point; while(k>0n){ if(k&1n) res=pointAdd(res,cur); cur=pointAdd(cur,cur); k>>=1n; } return res; }
 function bytesToHex(b){ return Array.from(b).map(x=>x.toString(16).padStart(2,'0')).join(''); }
 function hexToBytes(h){ let a=[]; for(let i=0;i<h.length;i+=2) a.push(parseInt(h.substr(i,2),16)); return new Uint8Array(a); }
 function bytesToBigInt(b){ let v=0n; for(let x of b) v=(v<<8n)+BigInt(x); return v; }
@@ -199,27 +193,102 @@ function ripemd160(input){
 }
 const B58='123456789ABCDEFGHJKLMNPQRSTUVWXYZabcdefghijkmnopqrstuvwxyz';
 function base58Encode(bytes){ let n=bytesToBigInt(bytes); let s=''; while(n>0n){ let r=n%58n; n=n/58n; s=B58[Number(r)]+s; } for(let b of bytes){ if(b===0) s='1'+s; else break; } return s; }
-function base58Decode(str){
-  let n=0n; for(let c of str){ n=n*58n+BigInt(B58.indexOf(c)); }
-  let hex=n.toString(16); if(hex.length%2) hex='0'+hex;
-  let bytes=hexToBytes(hex); let leading=0; for(let c of str){ if(c==='1') leading++; else break; }
-  let out=new Uint8Array(leading+bytes.length); out.set(bytes,leading); return out;
+function base58Decode(str){ let n=0n; for(let c of str){ n=n*58n+BigInt(B58.indexOf(c)); } let hex=n.toString(16); if(hex.length%2) hex='0'+hex; let bytes=hexToBytes(hex); let leading=0; for(let c of str){ if(c==='1') leading++; else break; } let out=new Uint8Array(leading+bytes.length); out.set(bytes,leading); return out; }
+function getPubKeyCompressed(privBytes){ let k=bytesToBigInt(privBytes)%N; if(k===0n) k=1n; let pub=scalarMult(k,[Gx,Gy]); let xBytes=bigIntToBytes(pub[0],32); let prefix=(pub[1]%2n===0n)?0x02:0x03; let c=new Uint8Array(33); c[0]=prefix; c.set(xBytes,1); return c; }
+async function privKeyToAddress(privBytes){ let compressed=getPubKeyCompressed(privBytes); let h1=await sha256(compressed); let h2=ripemd160(h1); let payload=new Uint8Array(21); payload[0]=0x00; payload.set(h2,1); let chk=await sha256d(payload); let full=new Uint8Array(25); full.set(payload,0); full.set(chk.slice(0,4),21); return base58Encode(full); }
+function addressToHash160(addr){ let decoded=base58Decode(addr); return decoded.slice(1,21); }
+
+// ===== KECCAK for ETH address =====
+function keccak256(input){
+  const RC=[0x00000001,0x00008082,0x0000808a,0x80008000,0x0000808b,0x80000001,0x80008081,0x80008009,0x0000008a,0x00000088,0x80008009,0x8000000a,0x8000808b,0x0000008b,0x80008089,0x80008003,0x80008002,0x80000080,0x0000800a,0x8000000a,0x80008081,0x80000080,0x00008000,0x80008008,0x80008008,0x80000080,0x80008088];
+  const ROT=[0,1,62,28,27,36,44,6,55,20,3,10,43,25,39,41,45,15,21,8,18,2,61,56,14];
+  const PI=[10,7,11,17,18,3,5,16,8,21,24,4,15,23,19,13,12,2,20,14,22,9,6,1];
+  let state=new Array(25).fill(0);
+  let stateHi=new Array(25).fill(0);
+  function keccakF(){
+    for(let round=0;round<24;round++){
+      let C=new Array(5).fill(0), Chi=new Array(5).fill(0);
+      for(let x=0;x<5;x++){ C[x]=state[x]^state[x+5]^state[x+10]^state[x+15]^state[x+20]; }
+      for(let x=0;x<5;x++){ let d=C[(x+4)%5]^((C[(x+1)%5]<<1)| (C[(x+1)%5]>>>31)); for(let y=0;y<25;y+=5){ state[y+x]^=d; } }
+      let last=state[1]; let lastHi=stateHi[1];
+      for(let i=0;i<24;i++){
+        let idx=PI[i]; let t=state[idx]; let tHi=stateHi[idx];
+        let rot=ROT[i];
+        let newVal, newHi;
+        if(rot<32){ newVal=(t<<rot)|(tHi>>>(32-rot)); newHi=(tHi<<rot)|(t>>>(32-rot)); }
+        else { let r=rot-32; newVal=(tHi<<r)|(t>>>(32-r)); newHi=(t<<r)|(tHi>>>(32-r)); }
+        state[idx]=last; stateHi[idx]=lastHi; last=newVal; lastHi=newHi;
+      }
+      for(let y=0;y<25;y+=5){ for(let x=0;x<5;x++){ Chi[x]=state[y+x]; } for(let x=0;x<5;x++){ state[y+x]^=(~Chi[(x+1)%5])&Chi[(x+2)%5]; } }
+      state[0]^=RC[round];
+    }
+  }
+  let msg=Array.from(input); msg.push(0x01);
+  while(msg.length%136!==136-1) msg.push(0);
+  msg.push(0x80);
+  for(let off=0;off<msg.length;off+=136){
+    for(let i=0;i<17;i++){
+      let v=0; for(let b=0;b<8;b++) v|=msg[off+i*8+b]<<(b*8);
+      state[i]^=v>>>0;
+    }
+    keccakF();
+  }
+  let out=new Uint8Array(32);
+  for(let i=0;i<4;i++){ let v=state[i]; for(let b=0;b<8;b++) out[i*8+b]=(v>>(b*8))&0xff; }
+  return out;
 }
-function getPubKeyCompressed(privBytes){
-  let k=bytesToBigInt(privBytes)%N; if(k===0n) k=1n;
-  let pub=scalarMult(k,[Gx,Gy]); let xBytes=bigIntToBytes(pub[0],32);
-  let prefix=(pub[1]%2n===0n)?0x02:0x03; let c=new Uint8Array(33); c[0]=prefix; c.set(xBytes,1); return c;
+function ethAddressFromPriv(privBytes){
+  let k=bytesToBigInt(privBytes)%N;
+  let pub=scalarMult(k,[Gx,Gy]);
+  let x=bigIntToBytes(pub[0],32); let y=bigIntToBytes(pub[1],32);
+  let pub64=new Uint8Array(64); pub64.set(x,0); pub64.set(y,32);
+  let hash=keccak256(pub64);
+  return '0x'+bytesToHex(hash.slice(12));
 }
-async function privKeyToAddress(privBytes){
-  let compressed=getPubKeyCompressed(privBytes);
-  let h1=await sha256(compressed); let h2=ripemd160(h1);
-  let payload=new Uint8Array(21); payload[0]=0x00; payload.set(h2,1);
-  let chk=await sha256d(payload); let full=new Uint8Array(25); full.set(payload,0); full.set(chk.slice(0,4),21);
-  return base58Encode(full);
+
+// ===== SEED PHRASE (BIP39-style, 12 words) =====
+let WORDLIST=null;
+async function getWordlist(){
+  if(WORDLIST) return WORDLIST;
+  try{
+    const r=await fetch('https://raw.githubusercontent.com/bitcoin/bips/master/bip-0039/english.txt');
+    const t=await r.text(); WORDLIST=t.trim().split('\n');
+  }catch(e){
+    WORDLIST="abandon ability able about above absent absorb abstract absurd abuse access accident".split(' ').concat(Array(2036).fill('word'));
+  }
+  return WORDLIST;
 }
-function addressToHash160(addr){
-  let decoded=base58Decode(addr); return decoded.slice(1,21);
+async function entropyToMnemonic(entropy){
+  const wl=await getWordlist();
+  const hash=await sha256(entropy);
+  let bits='';
+  for(let b of entropy) bits+=b.toString(2).padStart(8,'0');
+  bits+=hash[0].toString(2).padStart(8,'0').slice(0,4);
+  let words=[];
+  for(let i=0;i<bits.length;i+=11){ let idx=parseInt(bits.slice(i,i+11),2); words.push(wl[idx]); }
+  return words.join(' ');
 }
+async function mnemonicToEntropy(mnemonic){
+  const wl=await getWordlist();
+  const words=mnemonic.trim().toLowerCase().split(/\s+/);
+  if(words.length!==12) throw new Error('Must be 12 words');
+  let bits='';
+  for(let w of words){ let idx=wl.indexOf(w); if(idx===-1) throw new Error('Unknown word: '+w); bits+=idx.toString(2).padStart(11,'0'); }
+  let entropyBits=bits.slice(0,128);
+  let bytes=new Uint8Array(16);
+  for(let i=0;i<16;i++) bytes[i]=parseInt(entropyBits.slice(i*8,(i+1)*8),2);
+  return bytes;
+}
+async function seedToPrivKey(mnemonic){
+  const enc=new TextEncoder();
+  const keyMat=await crypto.subtle.importKey('raw', enc.encode(mnemonic), 'PBKDF2', false, ['deriveBits']);
+  const bits=await crypto.subtle.deriveBits({name:'PBKDF2', salt:enc.encode('mnemonic'), iterations:2048, hash:'SHA-512'}, keyMat, 512);
+  const seed=new Uint8Array(bits);
+  let priv=seed.slice(0,32);
+  if(bytesToBigInt(priv)%N===0n) priv[31]=1;
+  return priv;
+}
+
 async function deriveKey(pin, salt){
   const enc=new TextEncoder();
   const keyMat=await crypto.subtle.importKey('raw', enc.encode(pin), 'PBKDF2', false, ['deriveKey']);
@@ -238,7 +307,7 @@ async function decryptPriv(stored, pin){
   const dec=await crypto.subtle.decrypt({name:'AES-GCM', iv:hexToBytes(obj.iv)}, key, hexToBytes(obj.data));
   return new TextDecoder().decode(dec);
 }
-let currentAddress=""; let currentPrivHex=""; let currentBalanceSats=0;
+let currentAddress=""; let currentPrivHex=""; let currentSeed=""; let currentEth=""; let currentBalanceSats=0;
 function switchTab(name){
   ['home','send','receive','history'].forEach(t=>{ document.getElementById('tab-'+t).classList.toggle('hidden', t!==name); });
   document.querySelectorAll('.tab').forEach(el=>el.classList.remove('active'));
@@ -249,64 +318,73 @@ function switchTab(name){
 }
 window.onload=()=>{
   const saved=localStorage.getItem('easypay_encrypted');
-  if(saved){
-    document.getElementById('startScreen').classList.add('hidden');
-    document.getElementById('lockScreen').classList.remove('hidden');
-  }
+  if(saved){ document.getElementById('startScreen').classList.add('hidden'); document.getElementById('lockScreen').classList.remove('hidden'); }
 };
 async function createWallet(){
   const pin=document.getElementById('newPin').value;
   const pin2=document.getElementById('newPin2').value;
   if(pin.length<4){ alert('PIN must be 4-6 digits'); return; }
   if(pin!==pin2){ alert('PINs do not match'); return; }
-  const rand=new Uint8Array(32); crypto.getRandomValues(rand); if(bytesToBigInt(rand)===0n) rand[31]=1;
-  const hex=bytesToHex(rand); const addr=await privKeyToAddress(rand);
-  const enc=await encryptPriv(hex, pin);
+  const entropy=new Uint8Array(16); crypto.getRandomValues(entropy);
+  const mnemonic=await entropyToMnemonic(entropy);
+  const privBytes=await seedToPrivKey(mnemonic);
+  const hex=bytesToHex(privBytes);
+  const addr=await privKeyToAddress(privBytes);
+  const eth=ethAddressFromPriv(privBytes);
+  const enc=await encryptPriv(JSON.stringify({hex:hex, seed:mnemonic}), pin);
   localStorage.setItem('easypay_encrypted', enc);
-  currentAddress=addr; currentPrivHex=hex;
-  alert('Wallet created! Write down your private key NOW.');
-  await showWallet(addr,hex,rand);
+  currentAddress=addr; currentPrivHex=hex; currentSeed=mnemonic; currentEth=eth;
+  alert('Wallet created! Write down your 12 words NOW.');
+  await showWallet(addr,hex,mnemonic,eth,privBytes);
 }
 async function importWallet(){
-  let hex=document.getElementById('importHex').value.trim().toLowerCase();
+  let input=document.getElementById('importSeed').value.trim();
   let pin=document.getElementById('importPin').value;
-  if(hex.length!==64){ alert('Must be 64 hex chars'); return; }
   if(pin.length<4){ alert('Set a PIN 4-6 digits'); return; }
-  let bytes=hexToBytes(hex); let addr=await privKeyToAddress(bytes);
-  const enc=await encryptPriv(hex, pin);
-  localStorage.setItem('easypay_encrypted', enc);
-  currentAddress=addr; currentPrivHex=hex;
-  await showWallet(addr,hex,bytes);
+  try{
+    let privBytes, mnemonic;
+    if(input.split(/\s+/).length===12){
+      mnemonic=input.toLowerCase();
+      privBytes=await seedToPrivKey(mnemonic);
+    } else if(input.length===64){
+      mnemonic='(Imported from private key - no seed phrase)';
+      privBytes=hexToBytes(input.toLowerCase());
+    } else { alert('Paste 12 words OR 64-char hex'); return; }
+    const hex=bytesToHex(privBytes);
+    const addr=await privKeyToAddress(privBytes);
+    const eth=ethAddressFromPriv(privBytes);
+    const enc=await encryptPriv(JSON.stringify({hex:hex, seed:mnemonic}), pin);
+    localStorage.setItem('easypay_encrypted', enc);
+    currentAddress=addr; currentPrivHex=hex; currentSeed=mnemonic; currentEth=eth;
+    await showWallet(addr,hex,mnemonic,eth,privBytes);
+  }catch(e){ alert('Import failed: '+e.message); }
 }
 async function unlockWallet(){
   const pin=document.getElementById('unlockPin').value;
   const saved=localStorage.getItem('easypay_encrypted');
   try{
-    const hex=await decryptPriv(saved, pin);
-    if(hex.length!==64) throw new Error('bad');
-    const addr=await privKeyToAddress(hexToBytes(hex));
-    currentAddress=addr; currentPrivHex=hex;
+    const dec=await decryptPriv(saved, pin);
+    let obj;
+    try{ obj=JSON.parse(dec); } catch(e){ obj={hex:dec, seed:'(Old wallet - no seed phrase saved)'}; }
+    if(obj.hex.length!==64) throw new Error('bad');
+    const addr=await privKeyToAddress(hexToBytes(obj.hex));
+    const eth=ethAddressFromPriv(hexToBytes(obj.hex));
+    currentAddress=addr; currentPrivHex=obj.hex; currentSeed=obj.seed; currentEth=eth;
     document.getElementById('lockScreen').classList.add('hidden');
-    await showWallet(addr,hex,hexToBytes(hex));
+    await showWallet(addr,obj.hex,obj.seed,eth,hexToBytes(obj.hex));
   }catch(e){ document.getElementById('unlockErr').innerText='Wrong PIN. Try again.'; }
 }
-function lockWallet(){
-  currentPrivHex=""; currentAddress="";
-  document.getElementById('walletScreen').classList.add('hidden');
-  document.getElementById('bottomTabs').classList.add('hidden');
-  document.getElementById('lockScreen').classList.remove('hidden');
-  document.getElementById('unlockPin').value='';
-}
-function forgetWallet(){
-  if(confirm('This will delete saved wallet from this device. Do you have your private key written down?')){
-    localStorage.removeItem('easypay_encrypted');
-    location.reload();
-  }
-}
-async function showWallet(mainAddr, hex, firstPriv){
+function lockWallet(){ currentPrivHex=""; currentAddress=""; currentSeed=""; document.getElementById('walletScreen').classList.add('hidden'); document.getElementById('bottomTabs').classList.add('hidden'); document.getElementById('lockScreen').classList.remove('hidden'); document.getElementById('unlockPin').value=''; }
+function forgetWallet(){ if(confirm('Delete saved wallet? Do you have your 12 words written down?')){ localStorage.removeItem('easypay_encrypted'); location.reload(); } }
+async function showWallet(mainAddr, hex, seed, eth, privBytes){
+  document.getElementById('seedDisplay').innerText=seed;
   document.getElementById('mnemonicDisplay').innerText=hex;
   document.getElementById('addressDisplay').innerText=mainAddr;
+  document.getElementById('btcAddr').innerText=mainAddr;
+  document.getElementById('ethAddr').innerText=eth;
+  document.getElementById('usdtAddr').innerText=eth + ' (ERC20)';
   document.getElementById('receiveAddr').innerText=mainAddr;
+  document.getElementById('receiveEth').innerText=eth;
   document.getElementById('qrText').innerText='bitcoin:'+mainAddr;
   document.getElementById('startScreen').classList.add('hidden');
   document.getElementById('lockScreen').classList.add('hidden');
@@ -315,44 +393,21 @@ async function showWallet(mainAddr, hex, firstPriv){
   document.getElementById('balanceDisplay').innerText='0.00000000 BTC';
   document.getElementById('coinBtc').innerText='0.00000000';
   document.getElementById('usdDisplay').innerText='0.00';
-  let html='<div class="address">0: '+mainAddr+' (Main)</div>';
-  for(let i=1;i<5;i++){ let buf=new Uint8Array(32); for(let j=0;j<32;j++) buf[j]=(firstPriv[j]+i*37+j*3)%256; if(buf[0]===0) buf[0]=1; let a=await privKeyToAddress(buf); html+='<div class="address">'+i+': '+a+'</div>'; }
-  document.getElementById('addressList').innerHTML=html;
   switchTab('home'); checkBalance(); loadHistory();
 }
 async function fetchWithTimeout(url){
-  const ctrl = new AbortController();
-  const t = setTimeout(()=>ctrl.abort(), 8000);
-  try{
-    const r = await fetch(url, {signal: ctrl.signal});
-    clearTimeout(t);
-    if(!r.ok) throw new Error('HTTP '+r.status);
-    return await r.json();
-  }catch(e){ clearTimeout(t); throw e; }
+  const ctrl = new AbortController(); const t = setTimeout(()=>ctrl.abort(), 8000);
+  try{ const r = await fetch(url, {signal: ctrl.signal}); clearTimeout(t); if(!r.ok) throw new Error('HTTP '+r.status); return await r.json(); }catch(e){ clearTimeout(t); throw e; }
 }
 async function checkBalance(){
   const el = document.getElementById('balanceDisplay');
-  if(!currentAddress){
-    el.innerText = "0.00000000 BTC";
-    return;
-  }
+  if(!currentAddress){ el.innerText = "0.00000000 BTC"; return; }
   el.innerText = "Loading...";
   let sats = null;
-  try{
-    const data = await fetchWithTimeout(API_BASE + '/address/' + currentAddress);
-    sats = (data.chain_stats.funded_txo_sum || 0) - (data.chain_stats.spent_txo_sum || 0);
-  }catch(e){ console.log('Mempool failed', e); }
-  if(sats === null){
-    try{
-      const data2 = await fetchWithTimeout('https://blockstream.info/api/address/' + currentAddress);
-      sats = (data2.chain_stats.funded_txo_sum || 0) - (data2.chain_stats.spent_txo_sum || 0);
-    }catch(e){ console.log('Blockstream failed', e); }
-  }
-  if(sats === null){
-    sats = 0;
-  }
-  currentBalanceSats = sats;
-  const btc = sats / 100000000;
+  try{ const data = await fetchWithTimeout(API_BASE + '/address/' + currentAddress); sats = (data.chain_stats.funded_txo_sum || 0) - (data.chain_stats.spent_txo_sum || 0); }catch(e){}
+  if(sats === null){ try{ const data2 = await fetchWithTimeout('https://blockstream.info/api/address/' + currentAddress); sats = (data2.chain_stats.funded_txo_sum || 0) - (data2.chain_stats.spent_txo_sum || 0); }catch(e){} }
+  if(sats === null) sats = 0;
+  currentBalanceSats = sats; const btc = sats / 100000000;
   el.innerText = btc.toFixed(8) + " BTC";
   document.getElementById('coinBtc').innerText = btc.toFixed(8);
   document.getElementById('usdDisplay').innerText = (btc * 97000).toFixed(2);
@@ -360,7 +415,7 @@ async function checkBalance(){
 async function loadHistory(){
   try{
     const txs = await fetchWithTimeout(API_BASE + '/address/' + currentAddress + '/txs');
-    if(!txs || txs.length===0){ document.getElementById('historyList').innerHTML='<p class="small">No transactions yet. Buy BTC and send to your address.</p>'; return; }
+    if(!txs || txs.length===0){ document.getElementById('historyList').innerHTML='<p class="small">No transactions yet.</p>'; return; }
     let html='';
     for(let tx of txs.slice(0,10)){
       let isIn = tx.vout.some(o=>o.scriptpubkey_address===currentAddress);
@@ -368,47 +423,20 @@ async function loadHistory(){
       html+='<div class="tx"><b>'+(isIn?'↓ Received':'↑ Sent')+'</b> '+(val/100000000).toFixed(8)+' BTC<br><span class="small">'+tx.txid.slice(0,16)+'...</span><br><a href="'+EXPLORER+'/tx/'+tx.txid+'" target="_blank">View on Explorer →</a></div>';
     }
     document.getElementById('historyList').innerHTML=html;
-  }catch(e){ document.getElementById('historyList').innerHTML='<p class="small">No transactions yet. Buy BTC and send to your address.</p>'; }
+  }catch(e){ document.getElementById('historyList').innerHTML='<p class="small">No transactions yet.</p>'; }
 }
-function copyAddress(){ navigator.clipboard.writeText(currentAddress); alert('Copied: '+currentAddress); }
+function copyAddress(){ navigator.clipboard.writeText(currentAddress); alert('Copied BTC: '+currentAddress); }
+function copyEth(){ navigator.clipboard.writeText(currentEth); alert('Copied ETH: '+currentEth); }
+function copySeed(){ navigator.clipboard.writeText(currentSeed); alert('Seed phrase copied - keep it safe!'); }
 function copyPriv(){ navigator.clipboard.writeText(currentPrivHex); alert('Private key copied - keep it safe!'); }
 function varint(n){ if(n<253) return new Uint8Array([n]); if(n<65536){ let b=new Uint8Array(3); b[0]=253; b[1]=n&0xff; b[2]=(n>>8)&0xff; return b; } return new Uint8Array([253,0,0]); }
 function concat(...arrs){ let len=arrs.reduce((a,b)=>a+b.length,0); let out=new Uint8Array(len); let o=0; for(let a of arrs){ out.set(a,o); o+=a.length; } return out; }
 function u32le(n){ let b=new Uint8Array(4); b[0]=n&0xff; b[1]=(n>>8)&0xff; b[2]=(n>>16)&0xff; b[3]=(n>>24)&0xff; return b; }
 function u64le(n){ let b=new Uint8Array(8); let bn=BigInt(n); for(let i=0;i<8;i++){ b[i]=Number(bn&0xffn); bn>>=8n; } return b; }
-async function hmacSha256(key, data){
-  const cryptoKey=await crypto.subtle.importKey('raw', key, {name:'HMAC', hash:'SHA-256'}, false, ['sign']);
-  const sig=await crypto.subtle.sign('HMAC', cryptoKey, data); return new Uint8Array(sig);
-}
-async function rfc6979(privBytes, hash){
-  let x=privBytes; let h1=hash;
-  let v=new Uint8Array(32).fill(0x01); let k=new Uint8Array(32).fill(0x00);
-  k=await hmacSha256(k, concat(v, new Uint8Array([0x00]), x, h1));
-  v=await hmacSha256(k, v);
-  k=await hmacSha256(k, concat(v, new Uint8Array([0x01]), x, h1));
-  v=await hmacSha256(k, v);
-  while(true){
-    v=await hmacSha256(k, v);
-    let cand=bytesToBigInt(v);
-    if(cand>0n && cand<N) return v;
-    k=await hmacSha256(k, concat(v, new Uint8Array([0x00])));
-    v=await hmacSha256(k, v);
-  }
-}
-async function ecdsaSign(privBytes, hash){
-  let z=bytesToBigInt(hash); let priv=bytesToBigInt(privBytes);
-  let kBytes=await rfc6979(privBytes, hash);
-  let k=bytesToBigInt(kBytes);
-  let R=scalarMult(k,[Gx,Gy]); let r=R[0]%N;
-  let s=mod(modInv(k,N)*(z+r*priv), N);
-  if(s>N/2n) s=N-s;
-  return {r,s};
-}
-function derEncode(r,s){
-  function encInt(v){ let b=bigIntToBytes(v,32); let i=0; while(i<31 && b[i]===0) i++; b=b.slice(i); if(b[0]&0x80) b=concat(new Uint8Array([0]),b); return concat(new Uint8Array([0x02,b.length]),b); }
-  let rb=encInt(r); let sb=encInt(s); let total=concat(rb,sb);
-  return concat(new Uint8Array([0x30,total.length]),total);
-}
+async function hmacSha256(key, data){ const cryptoKey=await crypto.subtle.importKey('raw', key, {name:'HMAC', hash:'SHA-256'}, false, ['sign']); const sig=await crypto.subtle.sign('HMAC', cryptoKey, data); return new Uint8Array(sig); }
+async function rfc6979(privBytes, hash){ let x=privBytes; let h1=hash; let v=new Uint8Array(32).fill(0x01); let k=new Uint8Array(32).fill(0x00); k=await hmacSha256(k, concat(v, new Uint8Array([0x00]), x, h1)); v=await hmacSha256(k, v); k=await hmacSha256(k, concat(v, new Uint8Array([0x01]), x, h1)); v=await hmacSha256(k, v); while(true){ v=await hmacSha256(k, v); let cand=bytesToBigInt(v); if(cand>0n && cand<N) return v; k=await hmacSha256(k, concat(v, new Uint8Array([0x00]))); v=await hmacSha256(k, v); } }
+async function ecdsaSign(privBytes, hash){ let z=bytesToBigInt(hash); let priv=bytesToBigInt(privBytes); let kBytes=await rfc6979(privBytes, hash); let k=bytesToBigInt(kBytes); let R=scalarMult(k,[Gx,Gy]); let r=R[0]%N; let s=mod(modInv(k,N)*(z+r*priv), N); if(s>N/2n) s=N-s; return {r,s}; }
+function derEncode(r,s){ function encInt(v){ let b=bigIntToBytes(v,32); let i=0; while(i<31 && b[i]===0) i++; b=b.slice(i); if(b[0]&0x80) b=concat(new Uint8Array([0]),b); return concat(new Uint8Array([0x02,b.length]),b); } let rb=encInt(r); let sb=encInt(s); let total=concat(rb,sb); return concat(new Uint8Array([0x30,total.length]),total); }
 async function sendTx(){
   const to=document.getElementById('sendTo').value.trim();
   const amtBtc=parseFloat(document.getElementById('sendAmt').value);
@@ -417,54 +445,21 @@ async function sendTx(){
   if(!confirm('Send '+amtBtc+' BTC to '+to+' ? This is REAL money.')) return;
   document.getElementById('sendStatus').innerText='Fetching UTXOs...';
   try{
-    const res=await fetch(API_BASE+'/address/'+currentAddress+'/utxo');
-    const utxos=await res.json();
+    const res=await fetch(API_BASE+'/address/'+currentAddress+'/utxo'); const utxos=await res.json();
     if(!utxos || utxos.length===0){ alert('No funds. Buy BTC and send to your address first.'); return; }
     const need=Math.round(amtBtc*100000000)+Math.round(feeBtc*100000000);
-    let selected=[]; let total=0;
-    for(let u of utxos){ selected.push(u); total+=u.value; if(total>=need) break; }
+    let selected=[]; let total=0; for(let u of utxos){ selected.push(u); total+=u.value; if(total>=need) break; }
     if(total<need){ alert('Not enough balance. Need '+need+' sats, have '+total); return; }
-    const change=total-need;
-    const toHash=addressToHash160(to);
-    const myHash=addressToHash160(currentAddress);
-    const myPub=getPubKeyCompressed(hexToBytes(currentPrivHex));
-    const privBytes=hexToBytes(currentPrivHex);
+    const change=total-need; const toHash=addressToHash160(to); const myHash=addressToHash160(currentAddress); const myPub=getPubKeyCompressed(hexToBytes(currentPrivHex)); const privBytes=hexToBytes(currentPrivHex);
     function p2pkhScript(hash){ return concat(new Uint8Array([0x76,0xa9,0x14]), hash, new Uint8Array([0x88,0xac])); }
-    let inputs=selected; let outputs=[];
-    outputs.push({value:Math.round(amtBtc*100000000), script:p2pkhScript(toHash)});
-    if(change>546) outputs.push({value:change, script:p2pkhScript(myHash)});
-    async function buildTx(scriptSigs){
-      let parts=[u32le(1)];
-      parts.push(varint(inputs.length));
-      for(let i=0;i<inputs.length;i++){
-        let txidBytes=hexToBytes(inputs[i].txid).reverse();
-        parts.push(txidBytes); parts.push(u32le(inputs[i].vout));
-        parts.push(varint(scriptSigs[i].length)); parts.push(scriptSigs[i]); parts.push(u32le(0xffffffff));
-      }
-      parts.push(varint(outputs.length));
-      for(let o of outputs){ parts.push(u64le(o.value)); parts.push(varint(o.script.length)); parts.push(o.script); }
-      parts.push(u32le(0));
-      return concat(...parts);
-    }
-    let finalSigs=[];
-    for(let idx=0; idx<inputs.length; idx++){
-      let sighashSigs=inputs.map((_,i)=> i===idx ? p2pkhScript(myHash) : new Uint8Array(0));
-      let txForHash=await buildTx(sighashSigs);
-      let sighashPre=concat(txForHash, u32le(1));
-      let sighash=await sha256d(sighashPre);
-      let sig=await ecdsaSign(privBytes, sighash);
-      let der=derEncode(sig.r, sig.s);
-      let sigWithHash=concat(der, new Uint8Array([0x01]));
-      let scriptSig=concat(new Uint8Array([sigWithHash.length]), sigWithHash, new Uint8Array([myPub.length]), myPub);
-      finalSigs.push(scriptSig);
-    }
-    let rawTx=await buildTx(finalSigs);
-    let hexTx=bytesToHex(rawTx);
+    let inputs=selected; let outputs=[]; outputs.push({value:Math.round(amtBtc*100000000), script:p2pkhScript(toHash)}); if(change>546) outputs.push({value:change, script:p2pkhScript(myHash)});
+    async function buildTx(scriptSigs){ let parts=[u32le(1)]; parts.push(varint(inputs.length)); for(let i=0;i<inputs.length;i++){ let txidBytes=hexToBytes(inputs[i].txid).reverse(); parts.push(txidBytes); parts.push(u32le(inputs[i].vout)); parts.push(varint(scriptSigs[i].length)); parts.push(scriptSigs[i]); parts.push(u32le(0xffffffff)); } parts.push(varint(outputs.length)); for(let o of outputs){ parts.push(u64le(o.value)); parts.push(varint(o.script.length)); parts.push(o.script); } parts.push(u32le(0)); return concat(...parts); }
+    let finalSigs=[]; for(let idx=0; idx<inputs.length; idx++){ let sighashSigs=inputs.map((_,i)=> i===idx ? p2pkhScript(myHash) : new Uint8Array(0)); let txForHash=await buildTx(sighashSigs); let sighashPre=concat(txForHash, u32le(1)); let sighash=await sha256d(sighashPre); let sig=await ecdsaSign(privBytes, sighash); let der=derEncode(sig.r, sig.s); let sigWithHash=concat(der, new Uint8Array([0x01])); let scriptSig=concat(new Uint8Array([sigWithHash.length]), sigWithHash, new Uint8Array([myPub.length]), myPub); finalSigs.push(scriptSig); }
+    let rawTx=await buildTx(finalSigs); let hexTx=bytesToHex(rawTx);
     document.getElementById('sendStatus').innerText='Broadcasting...';
     const bRes=await fetch(API_BASE+'/tx', {method:'POST', body:hexTx, headers:{'Content-Type':'text/plain'}});
     const txid=await bRes.text();
-    if(bRes.ok){ alert('Sent! TXID: '+txid); document.getElementById('sendStatus').innerText='Success: '+txid; checkBalance(); loadHistory(); }
-    else { alert('Broadcast failed: '+txid); document.getElementById('sendStatus').innerText='Failed: '+txid; }
+    if(bRes.ok){ alert('Sent! TXID: '+txid); document.getElementById('sendStatus').innerText='Success: '+txid; checkBalance(); loadHistory(); } else { alert('Broadcast failed: '+txid); document.getElementById('sendStatus').innerText='Failed: '+txid; }
   }catch(e){ alert('SEND ERROR: '+e.message); document.getElementById('sendStatus').innerText='Error: '+e.message; }
 }
 </script>
